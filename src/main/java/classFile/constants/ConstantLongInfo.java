@@ -1,4 +1,12 @@
 package classFile.constants;
 
-public class ConstantLongInfo {
+import classFile.reader.ByteReader;
+
+public class ConstantLongInfo extends ConstantInfo {
+    private long value;
+
+    public ConstantLongInfo(byte tag, ByteReader reader) {
+        super(tag);
+        this.value = reader.readUint64();
+    }
 }

@@ -1,3 +1,5 @@
+import classFile.ClassFile;
+import classFile.reader.ClassReader;
 import classpath.ClassPath;
 import org.apache.commons.cli.*;
 
@@ -34,7 +36,7 @@ public class Jvm {
     }
 
 
-    public void execute(CommandLine cmd){
+    public void execute(CommandLine cmd) {
         if (cmd.hasOption("version")) {
             printVersion();
         } else if (cmd.hasOption("help") || cmd.hasOption("?") || !cmd.hasOption("cp")) {
@@ -54,6 +56,8 @@ public class Jvm {
     }
 
     private void startJvm(CommandLine cmd) {
+        String xjre = cmd.getOptionValue("xjre");
+        String classpath = cmd.getOptionValue("cp");
         String[] commandArgs = cmd.getArgs();
         if (commandArgs == null || commandArgs.length == 0) {
             throw new RuntimeException("can not found classname and args");
@@ -61,18 +65,13 @@ public class Jvm {
         String className = commandArgs[0];
         String args = getClassArgs(commandArgs);
 
-        String xjre = cmd.getOptionValue("xjre");
-        String classpath = cmd.getOptionValue("cp");
-        String message = String.format("classpath: %s\nclass: %s\nargs: %s",
-                classpath,
-                className,
-                args);
-
-        ClassPath classPath = new ClassPath(xjre, classpath);
         try {
+            ClassPath classPath = new ClassPath(xjre, classpath);
             byte[] bytes = classPath.readClass(className);
-            System.out.println(Arrays.toString(bytes));
-        }catch (Exception e) {
+            ClassReader classReader = new ClassReader(bytes);
+            ClassFile classFile = classReader.read();
+            System.out.println(classFile);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

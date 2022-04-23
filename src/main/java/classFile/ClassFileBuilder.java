@@ -1,15 +1,12 @@
-package classFile.reader;
+package classFile;
 
-import classFile.ClassFile;
-import classFile.ConstantPool;
-import classFile.MemberInfo;
 import classFile.attributes.AttributeInfo;
 
 public class ClassFileBuilder {
 
     private ClassFile classFile;
 
-    ClassFileBuilder() {
+    public ClassFileBuilder() {
         this.classFile = new ClassFile();
     }
 

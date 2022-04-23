@@ -1,4 +1,4 @@
-package classFile;
+package classFile.attributes;
 
 public class AttributeInfo {
 }
