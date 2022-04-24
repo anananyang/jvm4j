@@ -8,6 +8,7 @@ public class CodeAttributeInfo extends AttributeInfo {
 
     // 操作数栈的最大深度
     private short maxStack;
+    // 本地变量表的最大长度
     private short maxLocal;
     private byte[] code;
     private ExcetionTableEntry[] excetionTable;

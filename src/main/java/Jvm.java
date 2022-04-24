@@ -70,7 +70,6 @@ public class Jvm {
         String className = commandArgs[0];
         try {
             ClassPath classPath = new ClassPath(xjre, classpath);
-            // TODO 不直接返回字节，而是返回流，通过一个 1024 长度的缓存进行读取
             byte[] bytes = classPath.readClass(className);
             ClassReader classReader = new ClassReader(bytes);
             ClassFile classFile = classReader.read();
