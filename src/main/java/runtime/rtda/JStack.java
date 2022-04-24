@@ -36,7 +36,7 @@ public class JStack {
         return list.remove(maxIndex);
     }
 
-    public Frame top(Frame frame) {
+    public Frame top() {
         if (list.isEmpty()) {
             throw new RuntimeException("jvm stack is empty!");
         }
