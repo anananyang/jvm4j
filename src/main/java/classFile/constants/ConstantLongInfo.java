@@ -9,4 +9,8 @@ public class ConstantLongInfo extends ConstantInfo {
         super(tag);
         this.value = reader.readUint64();
     }
+
+    public long getValue() {
+        return value;
+    }
 }

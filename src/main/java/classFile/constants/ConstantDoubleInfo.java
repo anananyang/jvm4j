@@ -11,4 +11,8 @@ public class ConstantDoubleInfo extends ConstantInfo {
         long longBits = reader.readUint64();
         this.value = Double.longBitsToDouble(longBits);
     }
+
+    public double getValue() {
+        return value;
+    }
 }

@@ -56,6 +56,11 @@ public class Jvm {
     }
 
     private void startJvm(CommandLine cmd) {
+        ClassFile classFile = loadClass(cmd);
+        classFile.printClassInfo();
+    }
+
+    private ClassFile loadClass(CommandLine cmd) {
         String xjre = cmd.getOptionValue("xjre");
         String classpath = cmd.getOptionValue("cp");
         String[] commandArgs = cmd.getArgs();
@@ -63,19 +68,16 @@ public class Jvm {
             throw new RuntimeException("can not found classname and args");
         }
         String className = commandArgs[0];
-        String args = getClassArgs(commandArgs);
-
         try {
             ClassPath classPath = new ClassPath(xjre, classpath);
+            // TODO 不直接返回字节，而是返回流，通过一个 1024 长度的缓存进行读取
             byte[] bytes = classPath.readClass(className);
             ClassReader classReader = new ClassReader(bytes);
             ClassFile classFile = classReader.read();
-            System.out.println(classFile);
+            return classFile;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
-
     }
 
     private String getClassArgs(String[] commandArgs) {
@@ -88,4 +90,6 @@ public class Jvm {
         }
         return sb.toString();
     }
+
+
 }

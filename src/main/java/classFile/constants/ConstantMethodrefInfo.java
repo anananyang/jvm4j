@@ -12,4 +12,12 @@ public class ConstantMethodrefInfo extends ConstantInfo {
         this.classIndex = reader.readUnit16();
         this.nameAndTypeIndex = reader.readUnit16();
     }
+
+    public short getClassIndex() {
+        return classIndex;
+    }
+
+    public short getNameAndTypeIndex() {
+        return nameAndTypeIndex;
+    }
 }

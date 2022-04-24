@@ -79,8 +79,7 @@ public class ClassReader {
      * @return
      */
     private ConstantPool readConstantPool() {
-        ConstantPoolReader reader = new ConstantPoolReader(byteReader);
-        return reader.read();
+        return ConstantPoolReader.read(byteReader);
     }
 
 
@@ -101,15 +100,15 @@ public class ClassReader {
     }
 
     private MemberInfo[] readFields(ConstantPool constantPool) {
-        return null;
+        return MemberReader.read(byteReader, constantPool);
     }
 
     private MemberInfo[] readMethods(ConstantPool constantPool) {
-        return null;
+        return MemberReader.read(byteReader, constantPool);
     }
 
     private AttributeInfo[] readAttributes(ConstantPool constantPool) {
-        return null;
+        return AttributeReader.read(byteReader, constantPool);
     }
 
 }

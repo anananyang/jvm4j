@@ -19,7 +19,7 @@ public class DirEntry implements Entry {
         InputStream is = null;
         ByteArrayOutputStream bos = null;
         try {
-            is = new FileInputStream(classFile);
+            is = new BufferedInputStream(new FileInputStream(classFile));
             bos = new ByteArrayOutputStream();
             byte[] buf = new byte[1024];
             int size = 0;

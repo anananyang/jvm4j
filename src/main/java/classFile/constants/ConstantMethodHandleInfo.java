@@ -12,4 +12,12 @@ public class ConstantMethodHandleInfo extends ConstantInfo {
         this.referenceKind = reader.readUnit8();
         this.referenceIndex = reader.readUnit16();
     }
+
+    public byte getReferenceKind() {
+        return referenceKind;
+    }
+
+    public short getReferenceIndex() {
+        return referenceIndex;
+    }
 }

@@ -11,8 +11,6 @@ import static emu.ConstantType.*;
 
 public class ConstantPoolReader {
 
-    private ByteReader byteReader;
-
     private static EnumMap<ConstantType, Class<? extends ConstantInfo>> classMap = new EnumMap<>(ConstantType.class);
 
     static {
@@ -32,22 +30,18 @@ public class ConstantPoolReader {
         classMap.put(CONSTANT_InvokeDynamic, ConstantInvokeDynamicInfo.class);
     }
 
-    ConstantPoolReader(ByteReader byteReader) {
-        this.byteReader = byteReader;
-    }
-
-    public ConstantPool read() {
-        ConstantInfo[] constants = readConstants();
+    public static ConstantPool read(ByteReader byteReader) {
+        ConstantInfo[] constants = readConstants(byteReader);
         return new ConstantPool(constants);
     }
 
-    private ConstantInfo[] readConstants() {
+    private static ConstantInfo[] readConstants(ByteReader byteReader) {
         // 获取常量池的长度，这个长度是在编译时计算好的。
-        short count = readConstantPoolCount();
+        short count = readConstantPoolCount(byteReader);
         ConstantInfo[] constants = new ConstantInfo[count];
         // 有效的常量池索引是 1 - （n - 1）。0 是无效索引
         for (int i = 1; i < count; i++) {
-            constants[i] = readConstant();
+            constants[i] = readConstant(byteReader);
             // CONSTANT_Long_info 和 CONSTANT_Double_info 各占两个位置
             if (isLongConstant(constants[i]) || isDoubleConstant(constants[i])) {
                 i++;
@@ -56,25 +50,25 @@ public class ConstantPoolReader {
         return constants;
     }
 
-    short readConstantPoolCount() {
+    private static short readConstantPoolCount(ByteReader byteReader) {
         return byteReader.readUnit16();
     }
 
-    private ConstantInfo readConstant() {
+    private static ConstantInfo readConstant(ByteReader byteReader) {
         byte tag = byteReader.readUnit8();
-        ConstantInfo constantInfo = newConstantByTag(tag);
+        ConstantInfo constantInfo = newConstantByTag(tag, byteReader);
         return constantInfo;
     }
 
-    private boolean isLongConstant(ConstantInfo constant) {
+    private static boolean isLongConstant(ConstantInfo constant) {
         return constant instanceof ConstantLongInfo;
     }
 
-    private boolean isDoubleConstant(ConstantInfo constant) {
+    private static boolean isDoubleConstant(ConstantInfo constant) {
         return constant instanceof ConstantDoubleInfo;
     }
 
-    ConstantInfo newConstantByTag(byte tag) {
+    private static ConstantInfo newConstantByTag(byte tag, ByteReader byteReader) {
         Class<? extends ConstantInfo> clazz = getConstantInfoClass(tag);
         if (clazz == null) {
             throw new RuntimeException("can not recognize the constantTag [" + tag + "]");

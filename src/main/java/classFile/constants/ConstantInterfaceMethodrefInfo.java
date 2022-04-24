@@ -13,4 +13,11 @@ public class ConstantInterfaceMethodrefInfo extends ConstantInfo {
         this.nameAndTypeIndex = reader.readUnit16();
     }
 
+    public short getClassIndex() {
+        return classIndex;
+    }
+
+    public short getNameAndTypeIndex() {
+        return nameAndTypeIndex;
+    }
 }

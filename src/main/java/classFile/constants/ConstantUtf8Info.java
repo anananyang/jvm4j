@@ -4,7 +4,6 @@ import classFile.reader.ByteReader;
 import util.MUTF8;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class ConstantUtf8Info extends ConstantInfo {
 
@@ -19,6 +18,9 @@ public class ConstantUtf8Info extends ConstantInfo {
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public String getValue() {
+        return value;
     }
 }

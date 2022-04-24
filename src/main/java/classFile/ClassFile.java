@@ -2,9 +2,11 @@ package classFile;
 
 import classFile.attributes.AttributeInfo;
 
+import java.util.Arrays;
+
 public class ClassFile {
 
-//    private int magic;                       // 魔数
+    //    private int magic;                       // 魔数
     // 主版本号
     private short minorVersion;
     // 次版本号
@@ -64,13 +66,26 @@ public class ClassFile {
         this.attributes = attributes;
     }
 
+
+    public short getMinorVersion() {
+        return minorVersion;
+    }
+
+    public short getMajroVersion() {
+        return majroVersion;
+    }
+
+    public short getAccessFlag() {
+        return accessFlag;
+    }
+
     /**
      * 从常量池中获取类名
      *
      * @return
      */
     public String getClassName() {
-        return null;
+        return constantPool.getClassName(thisClass);
     }
 
     /**
@@ -79,7 +94,7 @@ public class ClassFile {
      * @return
      */
     public String getSuperName() {
-        return null;
+        return constantPool.getClassName(superClass);
     }
 
     /**
@@ -88,7 +103,41 @@ public class ClassFile {
      * @return
      */
     public String[] getInterfaceNames() {
-        return null;
+        int len = interfaces.length;
+        if (len == 0) {
+            return null;
+        }
+        String[] interfaceNames = new String[len];
+        for (int i = 0; i < len; i++) {
+            short interfaceNameIndex = interfaces[i];
+            interfaceNames[i] = constantPool.getClassName(interfaceNameIndex);
+        }
+        return interfaceNames;
     }
 
+    public int getConstantCount() {
+        return constantPool.getconstantoCount();
+    }
+
+
+    public void printClassInfo() {
+        System.out.println(String.format("version: %d.%d", majroVersion, minorVersion));
+        System.out.println(String.format("constants count: %d", constantPool.getconstantoCount()));
+        System.out.println(String.format("access flags: %s", Integer.toHexString(accessFlag)));
+        System.out.println(String.format("this class: %s", getClassName()));
+        System.out.println(String.format("super class: %s", getSuperName()));
+        System.out.println(String.format("interfaces: %s", Arrays.toString(getInterfaceNames())));
+        System.out.println(String.format("field count: %d", fileds == null ? 0 : fileds.length));
+        if(fileds != null) {
+            for(int i = 0; i < fileds.length; i++) {
+                System.out.println(String.format("   %s", fileds[i].getName()));
+            }
+        }
+        System.out.println(String.format("method count: %d", methods == null ? 0 : methods.length));
+        if(methods != null) {
+            for(int i = 0; i < methods.length; i++) {
+                System.out.println(String.format("   %s", methods[i].getName()));
+            }
+        }
+    }
 }

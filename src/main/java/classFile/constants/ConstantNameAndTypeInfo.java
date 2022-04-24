@@ -13,4 +13,12 @@ public class ConstantNameAndTypeInfo extends ConstantInfo {
         this.nameIndex = reader.readUnit16();
         this.descriptorIndex = reader.readUnit16();
     }
+
+    public short getNameIndex() {
+        return nameIndex;
+    }
+
+    public short getDescriptorIndex() {
+        return descriptorIndex;
+    }
 }

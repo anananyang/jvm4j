@@ -11,4 +11,8 @@ public class ConstantMethodTypeInfo extends ConstantInfo {
         super(tag);
         this.descriptorIndex = reader.readUnit16();
     }
+
+    public short getDescriptorIndex() {
+        return descriptorIndex;
+    }
 }

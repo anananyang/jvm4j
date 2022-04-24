@@ -1,5 +1,6 @@
 package classFile.constants;
 
+import classFile.ConstantPool;
 import classFile.reader.ByteReader;
 
 /**
@@ -13,5 +14,9 @@ public class ConstantClassInfo extends ConstantInfo {
     public ConstantClassInfo(byte tag, ByteReader reader) {
         super(tag);
         this.classNameIdx = reader.readUnit16();
+    }
+
+    public short getClassNameIdx() {
+        return classNameIdx;
     }
 }

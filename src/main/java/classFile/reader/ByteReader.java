@@ -48,7 +48,7 @@ public class ByteReader {
         if (curIdx + 8 > size) {
             throw new RuntimeException("no byte can read");
         }
-        long value = byteBuffer.getLong(curIdx);
+        long value = byteBuffer.getLong();
         curIdx = curIdx + 8;
 //        System.out.println("readUint64：curIdx: " + curIdx + "，realIndex: " + byteBuffer.position());
         return value;

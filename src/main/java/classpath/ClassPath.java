@@ -23,9 +23,7 @@ public class ClassPath {
     }
 
     public byte[] readClass(String className) throws IOException {
-        if (!className.endsWith(".class")) {
-            className = className + ".class";
-        }
+        className = this.handleClassName(className);
         byte[] bytes;
         bytes = bootClassPath.readClass(className);
         if (bytes != null) {
@@ -41,6 +39,15 @@ public class ClassPath {
         }
         throw new RuntimeException("can not found class!");
     }
+
+    private String handleClassName(String className) {
+        className = className.replace(".", File.separator);
+        if(!className.endsWith(".class")) {
+            className = className + ".class";
+        }
+        return className;
+    }
+
 
     private String getJreDir(String xjre) {
         // 先判断用户指定的 xjre

@@ -11,4 +11,12 @@ public class ConstantInvokeDynamicInfo extends ConstantInfo {
         this.bootstrapMethodAttrIndex = reader.readUnit16();
         this.nameAndTypeIndex = reader.readUnit16();
     }
+
+    public short getBootstrapMethodAttrIndex() {
+        return bootstrapMethodAttrIndex;
+    }
+
+    public short getNameAndTypeIndex() {
+        return nameAndTypeIndex;
+    }
 }

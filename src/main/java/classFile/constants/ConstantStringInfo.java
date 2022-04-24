@@ -11,4 +11,7 @@ public class ConstantStringInfo extends ConstantInfo {
         strIndex = reader.readUnit16();
     }
 
+    public short getStrIndex() {
+        return strIndex;
+    }
 }

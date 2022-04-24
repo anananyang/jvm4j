@@ -10,4 +10,7 @@ public class ConstantIntegerInfo extends ConstantInfo {
         this.value = reader.readUint32();
     }
 
+    public int getValue() {
+        return value;
+    }
 }
