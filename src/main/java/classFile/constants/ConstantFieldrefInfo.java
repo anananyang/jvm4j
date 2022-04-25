@@ -7,20 +7,20 @@ import classFile.reader.ByteReader;
  */
 public class ConstantFieldrefInfo extends ConstantInfo {
 
-    private short classIndex;
-    private short nameAndTypeIndex;
+    private int classIndex;
+    private int nameAndTypeIndex;
 
-    public ConstantFieldrefInfo(byte tag, ByteReader reader) {
+    public ConstantFieldrefInfo(int tag, ByteReader reader) {
         super(tag);
         this.classIndex = reader.readUnit16();
         this.nameAndTypeIndex = reader.readUnit16();
     }
 
-    public short getClassIndex() {
+    public int getClassIndex() {
         return classIndex;
     }
 
-    public short getNameAndTypeIndex() {
+    public int getNameAndTypeIndex() {
         return nameAndTypeIndex;
     }
 }

@@ -2,12 +2,12 @@ package classFile.reader;
 
 import classFile.ConstantPool;
 import classFile.constants.*;
-import emu.ConstantType;
+import classFile.emu.ConstantType;
 
 import java.lang.reflect.Constructor;
 import java.util.EnumMap;
 
-import static emu.ConstantType.*;
+import static classFile.emu.ConstantType.*;
 
 public class ConstantPoolReader {
 
@@ -37,7 +37,7 @@ public class ConstantPoolReader {
 
     private static ConstantInfo[] readConstants(ByteReader byteReader) {
         // 获取常量池的长度，这个长度是在编译时计算好的。
-        short count = readConstantPoolCount(byteReader);
+        int count = readConstantPoolCount(byteReader);
         ConstantInfo[] constants = new ConstantInfo[count];
         // 有效的常量池索引是 1 - （n - 1）。0 是无效索引
         for (int i = 1; i < count; i++) {
@@ -50,12 +50,12 @@ public class ConstantPoolReader {
         return constants;
     }
 
-    private static short readConstantPoolCount(ByteReader byteReader) {
+    private static int readConstantPoolCount(ByteReader byteReader) {
         return byteReader.readUnit16();
     }
 
     private static ConstantInfo readConstant(ByteReader byteReader) {
-        byte tag = byteReader.readUnit8();
+        int tag = byteReader.readUnit8();
         ConstantInfo constantInfo = newConstantByTag(tag, byteReader);
         return constantInfo;
     }
@@ -68,14 +68,14 @@ public class ConstantPoolReader {
         return constant instanceof ConstantDoubleInfo;
     }
 
-    private static ConstantInfo newConstantByTag(byte tag, ByteReader byteReader) {
+    private static ConstantInfo newConstantByTag(int tag, ByteReader byteReader) {
         Class<? extends ConstantInfo> clazz = getConstantInfoClass(tag);
         if (clazz == null) {
             throw new RuntimeException("can not recognize the constantTag [" + tag + "]");
         }
 
         try {
-            Constructor constructor = clazz.getDeclaredConstructor(byte.class, ByteReader.class);
+            Constructor constructor = clazz.getDeclaredConstructor(int.class, ByteReader.class);
             ConstantInfo constantInfo = (ConstantInfo) constructor.newInstance(tag, byteReader);
             return constantInfo;
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class ConstantPoolReader {
         }
     }
 
-    public static Class<? extends ConstantInfo> getConstantInfoClass(byte tag) {
+    public static Class<? extends ConstantInfo> getConstantInfoClass(int tag) {
         ConstantType constantType = getByTypeValue(tag);
         if (constantType == null) {
             return null;

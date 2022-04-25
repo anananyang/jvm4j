@@ -7,9 +7,9 @@ import classFile.reader.ByteReader;
 public class CodeAttributeInfo extends AttributeInfo {
 
     // 操作数栈的最大深度
-    private short maxStack;
+    private int maxStack;
     // 本地变量表的最大长度
-    private short maxLocal;
+    private int maxLocal;
     private byte[] code;
     private ExcetionTableEntry[] excetionTable;
     private AttributeInfo[] attributes;
@@ -36,7 +36,7 @@ public class CodeAttributeInfo extends AttributeInfo {
     }
 
     private ExcetionTableEntry[] readExcetionTable(ByteReader byteReader) {
-        short len = byteReader.readUnit16();
+        int len = byteReader.readUnit16();
         ExcetionTableEntry[] excetionTable = new ExcetionTableEntry[len];
         for (int i = 0; i < len; i++) {
             excetionTable[i] = new ExcetionTableEntry(byteReader);
@@ -48,11 +48,11 @@ public class CodeAttributeInfo extends AttributeInfo {
         return AttributeReader.read(byteReader, constantPool);
     }
 
-    public short getMaxStack() {
+    public int getMaxStack() {
         return maxStack;
     }
 
-    public short getMaxLocal() {
+    public int getMaxLocal() {
         return maxLocal;
     }
 
@@ -70,10 +70,10 @@ public class CodeAttributeInfo extends AttributeInfo {
 
 
     class ExcetionTableEntry {
-        private short startPc;
-        private short endPc;
-        private short handlePc;
-        private short catchType;
+        private int startPc;
+        private int endPc;
+        private int handlePc;
+        private int catchType;
 
         ExcetionTableEntry(ByteReader byteReader) {
             this.startPc = byteReader.readUnit16();
@@ -82,19 +82,19 @@ public class CodeAttributeInfo extends AttributeInfo {
             this.catchType = byteReader.readUnit16();
         }
 
-        public short getStartPc() {
+        public int getStartPc() {
             return startPc;
         }
 
-        public short getEndPc() {
+        public int getEndPc() {
             return endPc;
         }
 
-        public short getHandlePc() {
+        public int getHandlePc() {
             return handlePc;
         }
 
-        public short getCatchType() {
+        public int getCatchType() {
             return catchType;
         }
     }

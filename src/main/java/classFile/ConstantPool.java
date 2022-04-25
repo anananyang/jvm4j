@@ -36,20 +36,20 @@ public class ConstantPool {
 
     public String getName(int index) {
         ConstantNameAndTypeInfo constant = (ConstantNameAndTypeInfo) getByIndex(index);
-        short nameInde = constant.getNameIndex();
+        int nameInde = constant.getNameIndex();
         return getUtf8(nameInde);
     }
 
     public String getType(int index) {
         ConstantNameAndTypeInfo constant = (ConstantNameAndTypeInfo) getByIndex(index);
-        short descriptorIndex = constant.getDescriptorIndex();
+        int descriptorIndex = constant.getDescriptorIndex();
         return getUtf8(descriptorIndex);
     }
 
     public String[] getNameAndType(int index) {
         ConstantNameAndTypeInfo constant = (ConstantNameAndTypeInfo) getByIndex(index);
-        short nameIndex = constant.getNameIndex();
-        short descriptorIndex = constant.getDescriptorIndex();
+        int nameIndex = constant.getNameIndex();
+        int descriptorIndex = constant.getDescriptorIndex();
         String[] arr = {
                 getUtf8(nameIndex),
                 getUtf8(descriptorIndex)
@@ -59,7 +59,7 @@ public class ConstantPool {
 
     public String getClassName(int index) {
         ConstantClassInfo constant = (ConstantClassInfo) getByIndex(index);
-        short classNameIndex = constant.getClassNameIdx();
+        int classNameIndex = constant.getClassNameIdx();
         return getUtf8(classNameIndex);
     }
 

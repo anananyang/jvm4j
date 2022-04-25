@@ -16,8 +16,8 @@ public class ClassReader {
 
     public ClassFile read() {
         int magicNum = readAndCheckMagicNum();
-        short minorVersion = readAndCheckMinorVersion();
-        short majorVersion = readAndCheckMajorVersion();
+        int minorVersion = readAndCheckMinorVersion();
+        int majorVersion = readAndCheckMajorVersion();
         ConstantPool constantPool = readConstantPool();
 
         ClassFileBuilder builder = new ClassFileBuilder();
@@ -47,8 +47,8 @@ public class ClassReader {
         return magicNum;
     }
 
-    private short readAndCheckMinorVersion() {
-        short minorVersion = byteReader.readUnit16();
+    private int readAndCheckMinorVersion() {
+        int minorVersion = byteReader.readUnit16();
         // 此版本号只在 1.2 之前用过，之后全都为 0（我们不管 1.2 之前的版本）
         if (minorVersion != 0) {
             throw new RuntimeException("java.lang.UnsupportedClassVersionError!");
@@ -56,8 +56,8 @@ public class ClassReader {
         return minorVersion;
     }
 
-    private short readAndCheckMajorVersion() {
-        short majorVersion = byteReader.readUnit16();
+    private int readAndCheckMajorVersion() {
+        int majorVersion = byteReader.readUnit16();
         // 此版本号只在 1.2 之前用过，之后全都为 0（我们不管 1.2 之前的版本）
         switch (majorVersion) {
             case 46:  // 1.2 版本
@@ -83,19 +83,19 @@ public class ClassReader {
     }
 
 
-    private short readAccessFlag() {
+    private int readAccessFlag() {
         return byteReader.readUnit16();
     }
 
-    private short readThisClass() {
+    private int readThisClass() {
         return byteReader.readUnit16();
     }
 
-    private short readSuperClass() {
+    private int readSuperClass() {
         return byteReader.readUnit16();
     }
 
-    private short[] readInterfaces() {
+    private int[] readInterfaces() {
         return byteReader.readUint16s();
     }
 

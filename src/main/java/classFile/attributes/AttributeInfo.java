@@ -8,4 +8,8 @@ public class AttributeInfo {
         this.attrName = attrName;
         this.attrLen = attrLen;
     }
+
+    public String getAttrName() {
+        return attrName;
+    }
 }

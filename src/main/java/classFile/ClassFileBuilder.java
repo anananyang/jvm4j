@@ -10,13 +10,13 @@ public class ClassFileBuilder {
         this.classFile = new ClassFile();
     }
 
-    public ClassFileBuilder minorVersion(short minorVersion) {
+    public ClassFileBuilder minorVersion(int minorVersion) {
         classFile.setMinorVersion(minorVersion);
         return this;
     }
 
 
-    public ClassFileBuilder majroVersion(short majroVersion) {
+    public ClassFileBuilder majroVersion(int majroVersion) {
         classFile.setMajroVersion(majroVersion);
         return this;
     }
@@ -26,22 +26,22 @@ public class ClassFileBuilder {
         return this;
     }
 
-    public ClassFileBuilder accessFlag(short accessFlag) {
+    public ClassFileBuilder accessFlag(int accessFlag) {
         classFile.setAccessFlag(accessFlag);
         return this;
     }
 
-    public ClassFileBuilder thisClass(short thisClass) {
+    public ClassFileBuilder thisClass(int thisClass) {
         classFile.setThisClass(thisClass);
         return this;
     }
 
-    public ClassFileBuilder superClass(short superClass) {
+    public ClassFileBuilder superClass(int superClass) {
         classFile.setSuperClass(superClass);
         return this;
     }
 
-    public ClassFileBuilder interfaces(short[] interfaces) {
+    public ClassFileBuilder interfaces(int[] interfaces) {
         classFile.setInterfaces(interfaces);
         return this;
     }

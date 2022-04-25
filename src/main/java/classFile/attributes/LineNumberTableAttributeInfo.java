@@ -19,7 +19,7 @@ public class LineNumberTableAttributeInfo extends AttributeInfo {
     }
 
     private LineNumberTableEntry[] readLineNumberTable(ByteReader byteReader) {
-        short len = byteReader.readUnit16();
+        int len = byteReader.readUnit16();
         LineNumberTableEntry[] lineNumberTable = new LineNumberTableEntry[len];
         for (short i = 0; i < len; i++) {
             lineNumberTable[i] = new LineNumberTableEntry(byteReader);
@@ -32,19 +32,19 @@ public class LineNumberTableAttributeInfo extends AttributeInfo {
     }
 
     class LineNumberTableEntry {
-        private short startPc;
-        private short lineNum;
+        private int startPc;
+        private int lineNum;
 
         LineNumberTableEntry(ByteReader byteReader) {
             this.startPc = byteReader.readUnit16();
             this.lineNum = byteReader.readUnit16();
         }
 
-        public short getStartPc() {
+        public int getStartPc() {
             return startPc;
         }
 
-        public short getLineNum() {
+        public int getLineNum() {
             return lineNum;
         }
     }

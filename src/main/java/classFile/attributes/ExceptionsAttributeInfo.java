@@ -5,7 +5,7 @@ import classFile.reader.ByteReader;
 
 public class ExceptionsAttributeInfo extends AttributeInfo {
 
-    private short[] exceptionIndexTable;
+    private int[] exceptionIndexTable;
 
     private ConstantPool constantPool;
 
@@ -18,7 +18,7 @@ public class ExceptionsAttributeInfo extends AttributeInfo {
         this.exceptionIndexTable = byteReader.readUint16s();
     }
 
-    public short[] getExceptionIndexTable() {
+    public int[] getExceptionIndexTable() {
         return exceptionIndexTable;
     }
 }

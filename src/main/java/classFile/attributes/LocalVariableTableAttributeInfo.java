@@ -19,7 +19,7 @@ public class LocalVariableTableAttributeInfo extends AttributeInfo {
     }
 
     private LocalVariableTableEntry[] readlocalVariableTable(ByteReader byteReader) {
-        short len = byteReader.readUnit16();
+        int len = byteReader.readUnit16();
         LocalVariableTableEntry[] localVariableTable = new LocalVariableTableEntry[len];
         for (short i = 0; i < len; i++) {
             localVariableTable[i] = new LocalVariableTableEntry(byteReader);
@@ -33,15 +33,15 @@ public class LocalVariableTableAttributeInfo extends AttributeInfo {
 
     class LocalVariableTableEntry {
         // 局部变量的生命周期开始的字节码偏移量
-        private short startPc;
+        private int startPc;
         // 作用范围所覆盖的长度
-        private short length;
+        private int length;
         // 局部变量名称在常量池中的索引
-        private short nameIndex;
+        private int nameIndex;
         // 变量描述符在常量池中的索引
-        private short descriptorIndex;
+        private int descriptorIndex;
         // 局部变量在栈帧中的 slot 位置
-        private short index;
+        private int index;
 
         LocalVariableTableEntry(ByteReader byteReader) {
             this.startPc = byteReader.readUnit16();
@@ -52,23 +52,23 @@ public class LocalVariableTableAttributeInfo extends AttributeInfo {
         }
 
 
-        public short getStartPc() {
+        public int getStartPc() {
             return startPc;
         }
 
-        public short getLength() {
+        public int getLength() {
             return length;
         }
 
-        public short getNameIndex() {
+        public int getNameIndex() {
             return nameIndex;
         }
 
-        public short getDescriptorIndex() {
+        public int getDescriptorIndex() {
             return descriptorIndex;
         }
 
-        public short getIndex() {
+        public int getIndex() {
             return index;
         }
     }

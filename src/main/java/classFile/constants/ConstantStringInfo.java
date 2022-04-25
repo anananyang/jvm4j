@@ -4,14 +4,14 @@ import classFile.reader.ByteReader;
 
 public class ConstantStringInfo extends ConstantInfo {
     // 字符串在常量池中的索引
-    private short strIndex;
+    private int strIndex;
 
-    public ConstantStringInfo(byte tag, ByteReader reader) {
+    public ConstantStringInfo(int tag, ByteReader reader) {
         super(tag);
         strIndex = reader.readUnit16();
     }
 
-    public short getStrIndex() {
+    public int getStrIndex() {
         return strIndex;
     }
 }

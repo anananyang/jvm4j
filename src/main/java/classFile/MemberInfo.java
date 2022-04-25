@@ -1,14 +1,15 @@
 package classFile;
 
 import classFile.attributes.AttributeInfo;
+import classFile.emu.AttributeType;
 import classFile.reader.AttributeReader;
 import classFile.reader.ByteReader;
 
 public class MemberInfo {
     private ConstantPool constantPool;
-    private short accessFlag;
-    private short nameIndex;
-    private short descriptorIndex;
+    private int accessFlag;
+    private int nameIndex;
+    private int descriptorIndex;
     private AttributeInfo[] attributes;
 
     public MemberInfo(ByteReader byteReader, ConstantPool constantPool) {
@@ -19,7 +20,7 @@ public class MemberInfo {
         this.attributes = AttributeReader.read(byteReader, constantPool);
     }
 
-    public short getAccessFlag() {
+    public int getAccessFlag() {
         return accessFlag;
     }
 
@@ -34,4 +35,22 @@ public class MemberInfo {
     public AttributeInfo[] getAttributes() {
         return attributes;
     }
+
+    public AttributeInfo getFirstAttrByType(AttributeType attributeType) {
+        if (isAttributesEmpty()) {
+            return null;
+        }
+        String name = attributeType.name();
+        for (AttributeInfo attribute : attributes) {
+            if (name.equals(attribute.getAttrName())) {
+                return attribute;
+            }
+        }
+        return null;
+    }
+
+    private boolean isAttributesEmpty() {
+        return attributes == null || attributes.length == 0;
+    }
+
 }

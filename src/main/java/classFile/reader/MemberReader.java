@@ -6,7 +6,7 @@ import classFile.MemberInfo;
 public class MemberReader {
 
     public static MemberInfo[] read(ByteReader byteReader, ConstantPool constantPool) {
-        short len = byteReader.readUnit16();
+        int len = byteReader.readUnit16();
         if(len == 0) {
             return null;
         }

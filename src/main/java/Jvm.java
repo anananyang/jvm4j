@@ -57,10 +57,10 @@ public class Jvm {
 
     private void startJvm(CommandLine cmd) {
         ClassFile classFile = loadClass(cmd);
-        classFile.printClassInfo();
+
     }
 
-    private ClassFile loadClass(CommandLine cmd) {
+    public ClassFile loadClass(CommandLine cmd) {
         String xjre = cmd.getOptionValue("xjre");
         String classpath = cmd.getOptionValue("cp");
         String[] commandArgs = cmd.getArgs();

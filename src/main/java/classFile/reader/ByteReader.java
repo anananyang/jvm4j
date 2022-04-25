@@ -13,24 +13,24 @@ public class ByteReader {
         this.byteBuffer = ByteBuffer.wrap(bytes).asReadOnlyBuffer();
     }
 
-    public byte readUnit8() {
+    public int readUnit8() {
         if (curIdx + 1 > size) {
             throw new RuntimeException("no byte can read");
         }
         byte b = byteBuffer.get();
         curIdx++;
 //        System.out.println("readUnit8：curIdx: " + curIdx + "，realIndex: " + byteBuffer.position());
-        return b;
+        return b & 0xff;
     }
 
-    public short readUnit16() {
+    public int readUnit16() {
         if (curIdx + 2 > size) {
             throw new RuntimeException("no byte can read");
         }
         short value = byteBuffer.getShort();
         curIdx = curIdx + 2;
 //        System.out.println("readUnit16：curIdx: " + curIdx + "，realIndex: " + byteBuffer.position());
-        return value;
+        return value & 0xffff;
     }
 
     public int readUint32() {
@@ -51,7 +51,7 @@ public class ByteReader {
         long value = byteBuffer.getLong();
         curIdx = curIdx + 8;
 //        System.out.println("readUint64：curIdx: " + curIdx + "，realIndex: " + byteBuffer.position());
-        return value;
+        return value & 0xffffffffL;
     }
 
     /**
@@ -59,10 +59,10 @@ public class ByteReader {
      *
      * @return
      */
-    public short[] readUint16s() {
-        short len = this.readUnit16();
-        short[] arr = new short[len];
-        for (short i = 0; i < len; i++) {
+    public int[] readUint16s() {
+        int len = this.readUnit16();
+        int[] arr = new int[len];
+        for (int i = 0; i < len; i++) {
             arr[i] = readUnit16();
         }
         return arr;

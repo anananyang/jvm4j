@@ -6,17 +6,17 @@ import java.util.Arrays;
 
 public class ClassFile {
 
-    //    private int magic;                       // 魔数
+    //    priv int magic;                       // 魔数
     // 主版本号
-    private short minorVersion;
+    private int minorVersion;
     // 次版本号
-    private short majroVersion;
+    private int majroVersion;
     private ConstantPool constantPool;
 
-    private short accessFlag;                // 访问标记，16位的 bitmask
-    private short thisClass;
-    private short superClass = -1;           // superClass 父类名称在常量池的索引，默认没有父类
-    private short[] interfaces;
+    private int accessFlag;                // 访问标记，16位的 bitmask
+    private int thisClass;
+    private int superClass = -1;           // superClass 父类名称在常量池的索引，默认没有父类
+    private int[] interfaces;
     private MemberInfo[] fileds;
     private MemberInfo[] methods;
     private AttributeInfo[] attributes;
@@ -26,11 +26,11 @@ public class ClassFile {
 //        this.magic = magic;
 //    }
 
-    public void setMinorVersion(short minorVersion) {
+    public void setMinorVersion(int minorVersion) {
         this.minorVersion = minorVersion;
     }
 
-    public void setMajroVersion(short majroVersion) {
+    public void setMajroVersion(int majroVersion) {
         this.majroVersion = majroVersion;
     }
 
@@ -38,19 +38,19 @@ public class ClassFile {
         this.constantPool = constantPool;
     }
 
-    public void setAccessFlag(short accessFlag) {
+    public void setAccessFlag(int accessFlag) {
         this.accessFlag = accessFlag;
     }
 
-    public void setThisClass(short thisClass) {
+    public void setThisClass(int thisClass) {
         this.thisClass = thisClass;
     }
 
-    public void setSuperClass(short superClass) {
+    public void setSuperClass(int superClass) {
         this.superClass = superClass;
     }
 
-    public void setInterfaces(short[] interfaces) {
+    public void setInterfaces(int[] interfaces) {
         this.interfaces = interfaces;
     }
 
@@ -67,15 +67,19 @@ public class ClassFile {
     }
 
 
-    public short getMinorVersion() {
+    public int getMinorVersion() {
         return minorVersion;
     }
 
-    public short getMajroVersion() {
+    public int getMajroVersion() {
         return majroVersion;
     }
 
-    public short getAccessFlag() {
+    public ConstantPool getConstantPool() {
+        return constantPool;
+    }
+
+    public int getAccessFlag() {
         return accessFlag;
     }
 
@@ -109,35 +113,17 @@ public class ClassFile {
         }
         String[] interfaceNames = new String[len];
         for (int i = 0; i < len; i++) {
-            short interfaceNameIndex = interfaces[i];
+            int interfaceNameIndex = interfaces[i];
             interfaceNames[i] = constantPool.getClassName(interfaceNameIndex);
         }
         return interfaceNames;
     }
 
-    public int getConstantCount() {
-        return constantPool.getconstantoCount();
+    public MemberInfo[] getFileds() {
+        return fileds;
     }
 
-
-    public void printClassInfo() {
-        System.out.println(String.format("version: %d.%d", majroVersion, minorVersion));
-        System.out.println(String.format("constants count: %d", constantPool.getconstantoCount()));
-        System.out.println(String.format("access flags: %s", Integer.toHexString(accessFlag)));
-        System.out.println(String.format("this class: %s", getClassName()));
-        System.out.println(String.format("super class: %s", getSuperName()));
-        System.out.println(String.format("interfaces: %s", Arrays.toString(getInterfaceNames())));
-        System.out.println(String.format("field count: %d", fileds == null ? 0 : fileds.length));
-        if(fileds != null) {
-            for(int i = 0; i < fileds.length; i++) {
-                System.out.println(String.format("   %s", fileds[i].getName()));
-            }
-        }
-        System.out.println(String.format("method count: %d", methods == null ? 0 : methods.length));
-        if(methods != null) {
-            for(int i = 0; i < methods.length; i++) {
-                System.out.println(String.format("   %s", methods[i].getName()));
-            }
-        }
+    public MemberInfo[] getMethods() {
+        return methods;
     }
 }

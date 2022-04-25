@@ -1,13 +1,13 @@
 package classFile.constants;
 
 public abstract class ConstantInfo {
-    protected byte tag;
+    protected int tag;
 
-    ConstantInfo(byte tag) {
+    ConstantInfo(int tag) {
         this.tag = tag;
     }
 
-    public byte getTag() {
+    public int getTag() {
         return tag;
     }
 }

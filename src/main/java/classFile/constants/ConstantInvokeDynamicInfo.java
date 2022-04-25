@@ -3,20 +3,20 @@ package classFile.constants;
 import classFile.reader.ByteReader;
 
 public class ConstantInvokeDynamicInfo extends ConstantInfo {
-    private short bootstrapMethodAttrIndex;
-    private short nameAndTypeIndex;
+    private int bootstrapMethodAttrIndex;
+    private int nameAndTypeIndex;
 
-    public ConstantInvokeDynamicInfo(byte tag, ByteReader reader) {
+    public ConstantInvokeDynamicInfo(int tag, ByteReader reader) {
         super(tag);
         this.bootstrapMethodAttrIndex = reader.readUnit16();
         this.nameAndTypeIndex = reader.readUnit16();
     }
 
-    public short getBootstrapMethodAttrIndex() {
+    public int getBootstrapMethodAttrIndex() {
         return bootstrapMethodAttrIndex;
     }
 
-    public short getNameAndTypeIndex() {
+    public int getNameAndTypeIndex() {
         return nameAndTypeIndex;
     }
 }

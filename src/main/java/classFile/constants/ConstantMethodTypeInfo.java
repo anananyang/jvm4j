@@ -4,7 +4,7 @@ import classFile.reader.ByteReader;
 
 public class ConstantMethodTypeInfo extends ConstantInfo {
 
-    private short descriptorIndex;
+    private int descriptorIndex;
 
 
     public ConstantMethodTypeInfo(byte tag, ByteReader reader) {
@@ -12,7 +12,7 @@ public class ConstantMethodTypeInfo extends ConstantInfo {
         this.descriptorIndex = reader.readUnit16();
     }
 
-    public short getDescriptorIndex() {
+    public int getDescriptorIndex() {
         return descriptorIndex;
     }
 }

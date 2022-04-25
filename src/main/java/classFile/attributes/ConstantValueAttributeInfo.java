@@ -5,7 +5,7 @@ import classFile.reader.ByteReader;
 
 public class ConstantValueAttributeInfo extends AttributeInfo {
 
-    private short constantValueIndex;
+    private int constantValueIndex;
     private ConstantPool constantPool;
 
     public ConstantValueAttributeInfo(String attrName,
@@ -17,7 +17,7 @@ public class ConstantValueAttributeInfo extends AttributeInfo {
         this.constantValueIndex = byteReader.readUnit16();
     }
 
-    public short getConstantValueIndex() {
+    public int getConstantValueIndex() {
         return constantValueIndex;
     }
 }

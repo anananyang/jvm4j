@@ -5,7 +5,7 @@ import classFile.reader.ByteReader;
 
 public class SourceFileAttributeInfo extends AttributeInfo {
     // 常量池索引
-    private short sourceFileIndex;
+    private int sourceFileIndex;
     private ConstantPool constantPool;
 
     public SourceFileAttributeInfo(String attrName,
@@ -16,7 +16,7 @@ public class SourceFileAttributeInfo extends AttributeInfo {
         this.sourceFileIndex = byteReader.readUnit16();
     }
 
-    public short getSourceFileIndex() {
+    public int getSourceFileIndex() {
         return sourceFileIndex;
     }
 }

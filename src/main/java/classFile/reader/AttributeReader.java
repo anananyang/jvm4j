@@ -2,13 +2,13 @@ package classFile.reader;
 
 import classFile.ConstantPool;
 import classFile.attributes.*;
-import emu.AttributeType;
+import classFile.emu.AttributeType;
 
 import java.lang.reflect.Constructor;
 import java.util.EnumMap;
 
-import static emu.AttributeType.*;
-import static emu.AttributeType.Deprecated;
+import static classFile.emu.AttributeType.*;
+import static classFile.emu.AttributeType.Deprecated;
 
 public class AttributeReader {
 
@@ -32,7 +32,7 @@ public class AttributeReader {
     }
 
     private static AttributeInfo[] readAttributes(ByteReader byteReader, ConstantPool constantPool) {
-        short size = byteReader.readUnit16();
+        int size = byteReader.readUnit16();
         if (size == 0) {
             return null;
         }
@@ -40,12 +40,12 @@ public class AttributeReader {
         for (int i = 0; i < size; i++) {
             attributeInfos[i] = readAttribute(byteReader, constantPool);
         }
-        return null;
+        return attributeInfos;
     }
 
     private static AttributeInfo readAttribute(ByteReader byteReader, ConstantPool constantPool) {
         // 属性名称在常量池中的索引
-        short attrNameIdx = byteReader.readUnit16();
+        int attrNameIdx = byteReader.readUnit16();
         String attrName = constantPool.getUtf8(attrNameIdx);
         int attrLen = byteReader.readUint32();
         AttributeInfo attributeInfo = newAttributeInfo(attrName, attrLen, byteReader, constantPool);

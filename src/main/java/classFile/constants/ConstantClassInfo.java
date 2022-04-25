@@ -9,14 +9,14 @@ import classFile.reader.ByteReader;
 public class ConstantClassInfo extends ConstantInfo {
 
     // 类名在常量池中的索引
-    private short classNameIdx;
+    private int classNameIdx;
 
-    public ConstantClassInfo(byte tag, ByteReader reader) {
+    public ConstantClassInfo(int tag, ByteReader reader) {
         super(tag);
         this.classNameIdx = reader.readUnit16();
     }
 
-    public short getClassNameIdx() {
+    public int getClassNameIdx() {
         return classNameIdx;
     }
 }
