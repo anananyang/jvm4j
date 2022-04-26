@@ -20,6 +20,9 @@ public class InstructionTest {
 
         ClassPath classPath = new ClassPath(xjre, classpath);
         byte[] bytes = classPath.readClass(className);
+        if(bytes == null) {
+            throw new RuntimeException("can not found class [" + className + "]");
+        }
         ClassReader classReader = new ClassReader(bytes);
         ClassFile classFile = classReader.read();
         MemberInfo mainMethod = getMainMethod(classFile);

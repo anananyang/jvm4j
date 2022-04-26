@@ -16,6 +16,9 @@ public class DirEntry implements Entry {
 
     public byte[] readClass(String className) throws IOException {
         File classFile = new File(path, className);
+        if(!classFile.exists()) {
+            return null;
+        }
         InputStream is = null;
         ByteArrayOutputStream bos = null;
         try {

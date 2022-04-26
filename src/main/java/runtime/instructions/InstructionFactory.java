@@ -64,6 +64,7 @@ import runtime.instructions.math.bool.xor.IXOR;
 import runtime.instructions.math.bool.xor.LXOR;
 import runtime.instructions.math.incr.IINC;
 import runtime.instructions.math.shift.*;
+import runtime.instructions.references.*;
 import runtime.instructions.stack.dup.*;
 import runtime.instructions.stack.pop.POP;
 import runtime.instructions.stack.pop.POP2;
@@ -213,7 +214,6 @@ public abstract class InstructionFactory {
         nopInsctructionMap.put(0x98, new DCMPG());
 
 
-
     }
 
     private static Map<Integer, Class<? extends Instruction>> insctructionClassMap = new HashMap<>();
@@ -221,6 +221,9 @@ public abstract class InstructionFactory {
     static {
         insctructionClassMap.put(0x10, BIPUSH.class);
         insctructionClassMap.put(0x11, SIPUSH.class);
+        insctructionClassMap.put(0x12, LDC.class);
+        insctructionClassMap.put(0x13, LDC_W.class);
+        insctructionClassMap.put(0x14, LDC2_W.class);
 
         insctructionClassMap.put(0x15, ILOAD.class);
         insctructionClassMap.put(0x16, LLOAD.class);
@@ -255,6 +258,13 @@ public abstract class InstructionFactory {
         insctructionClassMap.put(0xaa, TABLE_SWITCH.class);
         insctructionClassMap.put(0xab, LOOKUP_SWITCH.class);
 
+        insctructionClassMap.put(0xb2, GET_STATIC.class);
+        insctructionClassMap.put(0xb3, PUT_STATIC.class);
+        insctructionClassMap.put(0xb4, GET_FIELD.class);
+        insctructionClassMap.put(0xb5, PUT_FIELD.class);
+
+        insctructionClassMap.put(0xc0, CHECKCAST.class);
+        insctructionClassMap.put(0xc1, INSTANCEOF.class);
         insctructionClassMap.put(0xc4, WIDE.class);
 
         insctructionClassMap.put(0xc6, IFNULL.class);
@@ -271,11 +281,11 @@ public abstract class InstructionFactory {
         }
         Class<? extends Instruction> clazz = insctructionClassMap.get(opCode);
         if (clazz == null) {
-            throw new RuntimeException("Unsupported opcode: " + opCode);
+            throw new RuntimeException("Unsupported opcode: 0x" + Integer.toHexString(opCode));
         }
         try {
             return clazz.newInstance();
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

@@ -3,7 +3,7 @@ package runtime.instructions.stack.swap;
 import runtime.instructions.base.NoOperandsInstruction;
 import runtime.rtda.priv.Frame;
 import runtime.rtda.priv.OperandStack;
-import runtime.rtda.priv.Slot;
+import runtime.rtda.Slot;
 
 /**
  * 交换栈顶的两个元素

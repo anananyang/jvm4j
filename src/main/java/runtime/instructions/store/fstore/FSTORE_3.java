@@ -8,6 +8,6 @@ public class FSTORE_3 extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        Store.fstore(frame, 2);
+        Store.fstore(frame, 3);
     }
 }

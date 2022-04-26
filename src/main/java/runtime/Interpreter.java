@@ -2,12 +2,13 @@ package runtime;
 
 import classFile.MemberInfo;
 import classFile.attributes.CodeAttributeInfo;
-import classFile.emu.AttributeType;
+import eum.AttributeType;
 import runtime.instructions.ByteCodeReader;
 import runtime.instructions.Instruction;
 import runtime.instructions.InstructionFactory;
 import runtime.rtda.priv.Frame;
 import runtime.rtda.priv.JThread;
+import runtime.rtda.share.heap.JMethod;
 
 public class Interpreter {
 
@@ -32,6 +33,25 @@ public class Interpreter {
         }
     }
 
+
+    public static void interpret(JMethod jMethod) {
+
+        int maxLocal = jMethod.getMaxLocals();
+        int maxStack = jMethod.getMaxStack();
+
+        JThread jThread = new JThread();
+        Frame frame = new Frame(jThread, maxLocal, maxStack);
+        frame.setjMethod(jMethod);
+        jThread.pushFrame(frame);
+        try {
+            loop(jThread, jMethod.getCode());   // 目前没有执行 ret 指令，所以会抛出异常
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 打印本地局部变量表的内容
+            frame.getLocalVaribleTable().printSlots();
+        }
+    }
+
     private static void loop(JThread jThread, byte[] byteCode) {
         Frame frame = jThread.curFrame();
         ByteCodeReader byteCodeReader = new ByteCodeReader(byteCode);
@@ -47,10 +67,13 @@ public class Interpreter {
             instruction.fetchOperands(byteCodeReader);
             // 重新设置 PC，PC 在 reader 之后已经重新置位
             frame.setNextPC(byteCodeReader.getPc());
+
+            System.out.println(String.format("pc: %d, instruction: %s", pc, instruction.getClass().getSimpleName()));
+
             // 执行指令
             instruction.execute(frame);
 
-            System.out.println(String.format("pc: %d, instruction: %s", pc, instruction.getClass().getSimpleName()));
+
         }
     }
 

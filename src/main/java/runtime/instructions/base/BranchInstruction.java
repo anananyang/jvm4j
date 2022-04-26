@@ -4,8 +4,6 @@ import runtime.instructions.ByteCodeReader;
 import runtime.instructions.Instruction;
 import runtime.rtda.priv.Frame;
 import runtime.rtda.priv.JThread;
-import runtime.rtda.priv.OperandStack;
-import runtime.rtda.priv.Slot;
 
 /**
  * 跳转指令

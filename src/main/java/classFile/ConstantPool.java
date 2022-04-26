@@ -15,6 +15,16 @@ public class ConstantPool {
     public ConstantInfo[] constants;
 
     public ConstantPool(ConstantInfo[] constants) {
+        if (constants != null) {
+            // 常量池从 1 开始
+            for (int i = 1; i < constants.length; i++) {
+                // long 和 double 占了两个位置，第二个位置为 null
+                if (constants[i] != null) {
+                    constants[i].setConstantPool(this);
+                }
+
+            }
+        }
         this.constants = constants;
     }
 
@@ -26,7 +36,7 @@ public class ConstantPool {
     }
 
     public int getconstantoCount() {
-        return constants.length;
+        return constants == null ? 0 : constants.length;
     }
 
     public String getUtf8(int index) {
@@ -36,31 +46,30 @@ public class ConstantPool {
 
     public String getName(int index) {
         ConstantNameAndTypeInfo constant = (ConstantNameAndTypeInfo) getByIndex(index);
-        int nameInde = constant.getNameIndex();
-        return getUtf8(nameInde);
+        return constant.getName();
     }
 
     public String getType(int index) {
         ConstantNameAndTypeInfo constant = (ConstantNameAndTypeInfo) getByIndex(index);
-        int descriptorIndex = constant.getDescriptorIndex();
-        return getUtf8(descriptorIndex);
+        ;
+        return constant.getDescriptor();
     }
 
     public String[] getNameAndType(int index) {
         ConstantNameAndTypeInfo constant = (ConstantNameAndTypeInfo) getByIndex(index);
-        int nameIndex = constant.getNameIndex();
-        int descriptorIndex = constant.getDescriptorIndex();
         String[] arr = {
-                getUtf8(nameIndex),
-                getUtf8(descriptorIndex)
+                constant.getName(),
+                constant.getDescriptor()
         };
         return arr;
     }
 
     public String getClassName(int index) {
         ConstantClassInfo constant = (ConstantClassInfo) getByIndex(index);
-        int classNameIndex = constant.getClassNameIdx();
-        return getUtf8(classNameIndex);
+        return constant.getClassName();
     }
 
+    public ConstantInfo[] getConstants() {
+        return constants;
+    }
 }

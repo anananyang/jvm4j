@@ -33,16 +33,12 @@ public class ClassPath {
         if (bytes != null) {
             return bytes;
         }
-        bytes = userClassPath.readClass(className);
-        if (bytes != null) {
-            return bytes;
-        }
-        throw new RuntimeException("can not found class!");
+        return userClassPath.readClass(className);
     }
 
     private String handleClassName(String className) {
         className = className.replace(".", File.separator);
-        if(!className.endsWith(".class")) {
+        if (!className.endsWith(".class")) {
             className = className + ".class";
         }
         return className;
@@ -84,7 +80,7 @@ public class ClassPath {
     }
 
     private Entry newExtClasspath(String jreDir) {
-        String bootPath = jreDir + File.separator +  "lib" + File.separator + "ext" + File.separator + "*";
+        String bootPath = jreDir + File.separator + "lib" + File.separator + "ext" + File.separator + "*";
         return EntryFactory.newEntry(bootPath);
     }
 

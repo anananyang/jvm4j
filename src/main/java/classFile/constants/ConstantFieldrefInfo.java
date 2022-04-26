@@ -1,26 +1,16 @@
 package classFile.constants;
 
 import classFile.reader.ByteReader;
+import eum.ConstantType;
 
 /**
  * 字段符号引用
  */
-public class ConstantFieldrefInfo extends ConstantInfo {
+public class ConstantFieldrefInfo extends ConstantMemberrefInfo {
 
-    private int classIndex;
-    private int nameAndTypeIndex;
 
-    public ConstantFieldrefInfo(int tag, ByteReader reader) {
-        super(tag);
-        this.classIndex = reader.readUnit16();
-        this.nameAndTypeIndex = reader.readUnit16();
+    public ConstantFieldrefInfo(ConstantType type, ByteReader reader) {
+        super(type, reader);
     }
 
-    public int getClassIndex() {
-        return classIndex;
-    }
-
-    public int getNameAndTypeIndex() {
-        return nameAndTypeIndex;
-    }
 }

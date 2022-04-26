@@ -1,4 +1,4 @@
-package classFile.emu;
+package eum;
 
 /**
  * 虚拟机规范规定了23种属性，先解析其中的 8 种

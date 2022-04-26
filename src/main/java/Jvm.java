@@ -57,7 +57,6 @@ public class Jvm {
 
     private void startJvm(CommandLine cmd) {
         ClassFile classFile = loadClass(cmd);
-
     }
 
     public ClassFile loadClass(CommandLine cmd) {

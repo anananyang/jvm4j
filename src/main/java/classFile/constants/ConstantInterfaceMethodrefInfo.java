@@ -1,23 +1,12 @@
 package classFile.constants;
 
 import classFile.reader.ByteReader;
+import eum.ConstantType;
 
-public class ConstantInterfaceMethodrefInfo extends ConstantInfo {
+public class ConstantInterfaceMethodrefInfo extends ConstantMemberrefInfo {
 
-    private int classIndex;
-    private int nameAndTypeIndex;
 
-    public ConstantInterfaceMethodrefInfo(int tag, ByteReader reader) {
-        super(tag);
-        this.classIndex = reader.readUnit16();
-        this.nameAndTypeIndex = reader.readUnit16();
-    }
-
-    public int getClassIndex() {
-        return classIndex;
-    }
-
-    public int getNameAndTypeIndex() {
-        return nameAndTypeIndex;
+    public ConstantInterfaceMethodrefInfo(ConstantType type, ByteReader reader) {
+        super(type, reader);
     }
 }

@@ -3,7 +3,7 @@ package runtime.instructions.stack.dup;
 import runtime.instructions.base.NoOperandsInstruction;
 import runtime.rtda.priv.Frame;
 import runtime.rtda.priv.OperandStack;
-import runtime.rtda.priv.Slot;
+import runtime.rtda.Slot;
 
 /**
  * 4 3 2 1 -> 2 1 4 3 2 1

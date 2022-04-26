@@ -2,13 +2,13 @@ package classFile.reader;
 
 import classFile.ConstantPool;
 import classFile.attributes.*;
-import classFile.emu.AttributeType;
+import eum.AttributeType;
 
 import java.lang.reflect.Constructor;
 import java.util.EnumMap;
 
-import static classFile.emu.AttributeType.*;
-import static classFile.emu.AttributeType.Deprecated;
+import static eum.AttributeType.*;
+import static eum.AttributeType.Deprecated;
 
 public class AttributeReader {
 

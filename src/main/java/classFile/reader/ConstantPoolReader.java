@@ -2,12 +2,12 @@ package classFile.reader;
 
 import classFile.ConstantPool;
 import classFile.constants.*;
-import classFile.emu.ConstantType;
+import eum.ConstantType;
 
 import java.lang.reflect.Constructor;
 import java.util.EnumMap;
 
-import static classFile.emu.ConstantType.*;
+import static eum.ConstantType.*;
 
 public class ConstantPoolReader {
 
@@ -69,22 +69,22 @@ public class ConstantPoolReader {
     }
 
     private static ConstantInfo newConstantByTag(int tag, ByteReader byteReader) {
-        Class<? extends ConstantInfo> clazz = getConstantInfoClass(tag);
+        ConstantType constantType = getByTypeValue(tag);
+        Class<? extends ConstantInfo> clazz = getConstantInfoClass(constantType);
         if (clazz == null) {
             throw new RuntimeException("can not recognize the constantTag [" + tag + "]");
         }
 
         try {
-            Constructor constructor = clazz.getDeclaredConstructor(int.class, ByteReader.class);
-            ConstantInfo constantInfo = (ConstantInfo) constructor.newInstance(tag, byteReader);
+            Constructor constructor = clazz.getDeclaredConstructor(ConstantType.class, ByteReader.class);
+            ConstantInfo constantInfo = (ConstantInfo) constructor.newInstance(constantType, byteReader);
             return constantInfo;
         } catch (Exception e) {
             throw new RuntimeException(e);   // 继续向外抛出异常
         }
     }
 
-    public static Class<? extends ConstantInfo> getConstantInfoClass(int tag) {
-        ConstantType constantType = getByTypeValue(tag);
+    public static Class<? extends ConstantInfo> getConstantInfoClass(ConstantType constantType) {
         if (constantType == null) {
             return null;
         }

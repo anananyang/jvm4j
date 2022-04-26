@@ -1,6 +1,7 @@
 package classFile.constants;
 
 import classFile.reader.ByteReader;
+import eum.ConstantType;
 import util.MUTF8;
 
 import java.io.IOException;
@@ -9,8 +10,8 @@ public class ConstantUtf8Info extends ConstantInfo {
 
     private String value;
 
-    public ConstantUtf8Info(int tag, ByteReader reader) {
-        super(tag);
+    public ConstantUtf8Info(ConstantType type, ByteReader reader) {
+        super(type);
         int len = reader.readUnit16();
         byte[] bytes = reader.readBytes(len);
         try {

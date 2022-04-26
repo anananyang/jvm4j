@@ -1,13 +1,25 @@
 package classFile.constants;
 
-public abstract class ConstantInfo {
-    protected int tag;
+import classFile.ConstantPool;
+import eum.ConstantType;
 
-    ConstantInfo(int tag) {
-        this.tag = tag;
+public abstract class ConstantInfo {
+    protected ConstantType type;
+    protected ConstantPool constantPool;
+
+    ConstantInfo(ConstantType type) {
+        this.type = type;
     }
 
     public int getTag() {
-        return tag;
+        return type.getTag();
+    }
+
+    public ConstantType getType() {
+        return type;
+    }
+
+    public void setConstantPool(ConstantPool constantPool) {
+        this.constantPool = constantPool;
     }
 }

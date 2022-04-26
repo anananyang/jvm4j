@@ -17,7 +17,7 @@ public class IDIV extends NoOperandsInstruction {
         // 被除数
         int val2 = operandStack.popInt();
         if(isZero(val1)) {
-            throw new RuntimeException("java.lang.ArithmeticException: / by zero");
+            throw new ArithmeticException("/ by zero");
         }
         int result = val2 / val1;
         operandStack.pushInt(result);

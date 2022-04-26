@@ -9,7 +9,7 @@ import runtime.rtda.priv.Frame;
  */
 public abstract class Index16Instruction implements Instruction {
 
-    private int index;
+    protected int index;
 
     @Override
     public void fetchOperands(ByteCodeReader reader) {

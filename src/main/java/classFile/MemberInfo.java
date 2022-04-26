@@ -1,7 +1,7 @@
 package classFile;
 
 import classFile.attributes.AttributeInfo;
-import classFile.emu.AttributeType;
+import eum.AttributeType;
 import classFile.reader.AttributeReader;
 import classFile.reader.ByteReader;
 

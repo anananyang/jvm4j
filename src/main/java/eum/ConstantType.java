@@ -1,4 +1,4 @@
-package classFile.emu;
+package eum;
 
 public enum ConstantType {
 

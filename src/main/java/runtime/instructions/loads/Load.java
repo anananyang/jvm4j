@@ -1,11 +1,12 @@
 package runtime.instructions.loads;
 
 import runtime.rtda.priv.Frame;
+import runtime.rtda.share.heap.JObject;
 
 public abstract class Load {
 
     public static void aload(Frame frame, int index) {
-        Object value = frame.getLocalVaribleTable().getRef(index);
+        JObject value = frame.getLocalVaribleTable().getRef(index);
         frame.getOperandStack().pushRef(value);
     }
 

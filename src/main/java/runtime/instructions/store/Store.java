@@ -1,11 +1,12 @@
 package runtime.instructions.store;
 
 import runtime.rtda.priv.Frame;
+import runtime.rtda.share.heap.JObject;
 
 public class Store {
 
     public static void astore(Frame frame, int index) {
-        Object value = frame.getOperandStack().popRef();
+        JObject value = frame.getOperandStack().popRef();
         frame.getLocalVaribleTable().setRef(index, value);
     }
 

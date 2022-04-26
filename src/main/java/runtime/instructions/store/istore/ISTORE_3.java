@@ -8,6 +8,6 @@ public class ISTORE_3 extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        Store.istore(frame, 2);
+        Store.istore(frame, 3);
     }
 }
