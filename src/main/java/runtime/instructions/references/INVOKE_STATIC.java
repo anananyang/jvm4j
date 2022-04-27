@@ -14,10 +14,16 @@ public class INVOKE_STATIC extends Index16Instruction {
     public void execute(Frame frame) {
         MethodRef methodRef = this.getMethodRef(frame);
         JMethod method = methodRef.resolveMethod();
-        if(!method.isStatic()) {
+        if (!method.isStatic()) {
             throw new IncompatibleClassChangeError();
         }
-        InvokeMethodLogic.invokeMethod(frame, method);
+        JClass jClass = method.getjClass();
+        if (!jClass.isInitStarted()) {
+            frame.revertNextPC();    // pc 指向上一条指令，使得下一次循环时，本条指令重新执行
+            jClass.initClass(frame.getjThread());
+        } else {
+            InvokeMethodLogic.invokeMethod(frame, method);
+        }
     }
 
     private MethodRef getMethodRef(Frame frame) {

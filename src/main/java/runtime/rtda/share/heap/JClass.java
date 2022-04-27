@@ -4,6 +4,8 @@ import classFile.ClassFile;
 import classFile.MemberInfo;
 import eum.AccessFlag;
 import runtime.rtda.Slot;
+import runtime.rtda.priv.Frame;
+import runtime.rtda.priv.JThread;
 import runtime.rtda.share.heap.rtcp.RuntimeConstantPool;
 
 
@@ -346,12 +348,16 @@ public class JClass {
     }
 
     public JMethod getStaticMethod(String name, String descriptor) {
+        return getMethod(name, descriptor, true);
+    }
+
+    private JMethod getMethod(String name, String descriptor, boolean isStatic) {
         JMethod[] methods = this.methods;
         if (methods == null) {
             return null;
         }
         for (JMethod method : methods) {
-            if (method.isStatic()) {
+            if (method.isStatic() == isStatic) {
                 if (name.equals(method.getName()) && descriptor.equals(method.getDescriptor())) {
                     return method;
                 }
@@ -366,5 +372,25 @@ public class JClass {
 
     public void setInitStarted(boolean initStarted) {
         this.initStarted = initStarted;
+    }
+
+    /**
+     * 调用类到初始化方法对类进行初始化
+     */
+    public void initClass(JThread jThread) {
+        // 初始化开始标记
+        this.initStarted = true;
+        // 再初始化当前类（先入栈的后初始化）
+        JMethod cinitMethod = getMethod("<clinit>", "()V", true);
+        if(cinitMethod != null) {
+            Frame frame = jThread.newFrame(cinitMethod);
+            jThread.pushFrame(frame);
+        }
+        // 先初始化父类(后入栈的先初始化)
+        if(!this.isInterface()) {
+            if(superClass != null && !superClass.isInitStarted()) {
+                superClass.initClass(jThread);
+            }
+        }
     }
 }

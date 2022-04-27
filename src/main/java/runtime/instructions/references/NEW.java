@@ -22,11 +22,17 @@ public class NEW extends Index16Instruction {
     public void execute(Frame frame) {
         ClassRef classRef = this.getClassRef(frame);
         JClass jClass = classRef.resolveClass();
-        if(jClass.isAbstract() || jClass.isInterface()) {
+        if (jClass.isAbstract() || jClass.isInterface()) {
             throw new RuntimeException("java.lang.InstantiationError");
         }
-        JObject jObject = jClass.newObject();
-        frame.getOperandStack().pushRef(jObject);
+        if (!jClass.isInitStarted()) {
+            frame.revertNextPC();    // pc 指向上一条指令，使得下一次循环时，本条指令重新执行
+            jClass.initClass(frame.getjThread());
+        } else {
+            JObject jObject = jClass.newObject();
+            frame.getOperandStack().pushRef(jObject);
+        }
+
     }
 
     private ClassRef getClassRef(Frame frame) {

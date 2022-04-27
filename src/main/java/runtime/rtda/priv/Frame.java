@@ -71,4 +71,10 @@ public class Frame {
     public ByteCodeReader getByteCodeReader() {
         return byteCodeReader;
     }
+
+    public void revertNextPC() {
+        // 返回到上一条指令
+        this.nextPC = jThread.getPc();
+    }
+
 }

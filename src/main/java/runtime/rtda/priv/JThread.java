@@ -1,5 +1,7 @@
 package runtime.rtda.priv;
 
+import runtime.rtda.share.heap.JMethod;
+
 public class JThread {
     private int pc;
     private JStack stack;
@@ -31,4 +33,9 @@ public class JThread {
     public boolean isStackEmpty() {
         return stack.isEmpty();
     }
+
+    public Frame newFrame(JMethod jMethod) {
+        return new Frame(this, jMethod);
+    }
+
 }

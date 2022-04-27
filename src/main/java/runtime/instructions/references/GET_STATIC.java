@@ -22,8 +22,15 @@ public class GET_STATIC extends Index16Instruction {
         if (!field.isStatic()) {
             throw new IncompatibleClassChangeError();
         }
+        JClass fieldClass = field.getjClass();
+        // 判断类是否已经初始化
+        if (!fieldClass.isInitStarted()) {
+            frame.revertNextPC();    // pc 指向上一条指令，使得下一次循环时，本条指令重新执行
+            fieldClass.initClass(frame.getjThread());
+        } else {
+            getStatic(field, frame);
+        }
 
-        getStatic(field, frame);
     }
 
     private void getStatic(JField field, Frame frame) {

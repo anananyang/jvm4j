@@ -24,7 +24,6 @@ public class JClassTest {
         JClassLoader loader = new JClassLoader(classPath);
         JClass jClass = loader.loadClass(className);
         JMethod mainMethod = jClass.getMainMethod();
-
         if (mainMethod == null) {
             throw new RuntimeException("main method not found");
         }

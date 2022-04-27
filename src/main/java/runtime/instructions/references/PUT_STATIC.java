@@ -29,7 +29,15 @@ public class PUT_STATIC extends Index16Instruction {
                 throw new IllegalAccessError();
             }
         }
-        putStatic(jField, frame);
+
+        if (!fieldClass.isInitStarted()) {
+            frame.revertNextPC();    // pc 指向上一条指令，使得下一次循环时，本条指令重新执行
+            fieldClass.initClass(frame.getjThread());
+        } else {
+            putStatic(jField, frame);
+        }
+
+
     }
 
     private FieldRef getFieldRef(Frame frame) {

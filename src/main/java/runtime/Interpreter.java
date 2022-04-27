@@ -64,7 +64,7 @@ public class Interpreter {
 
     public static void interpret(JMethod jMethod, boolean logInstructionInfo) {
         JThread jThread = new JThread();
-        Frame frame = new Frame(jThread, jMethod);
+        Frame frame = jThread.newFrame(jMethod);
         jThread.pushFrame(frame);
         try {
             loop(jThread, logInstructionInfo);   // 目前没有执行 ret 指令，所以会抛出异常
@@ -72,11 +72,11 @@ public class Interpreter {
             e.printStackTrace();
             // 打印本地局部变量表的内容
             System.out.println(String.format(">> pc: %d, %s.%s(%s)",
-                    frame.getNextPC(),
-                    frame.getjMethod().getjClass().getThisClassName(),
-                    frame.getjMethod().getName(),
-                    frame.getjMethod().getDescriptor()));
-            frame.getLocalVaribleTable().printSlots();
+                    jThread.topFrame().getNextPC(),
+                    jThread.topFrame().getjMethod().getjClass().getThisClassName(),
+                    jThread.topFrame().getjMethod().getName(),
+                    jThread.topFrame().getjMethod().getDescriptor()));
+            jThread.topFrame().getLocalVaribleTable().printSlots();
         }
     }
 
@@ -85,6 +85,7 @@ public class Interpreter {
             Frame frame = jThread.topFrame();
             ByteCodeReader byteCodeReader = frame.getByteCodeReader();
             int pc = frame.getNextPC();
+            // 记录一下，在类初始化时可以用于恢复
             jThread.setPc(pc);
             byteCodeReader.setPC(pc);
             // 读取字节码标识符
@@ -98,8 +99,6 @@ public class Interpreter {
             if(logInstructionInfo) {
                 System.out.println(String.format("pc: %d, instruction: %s", pc, instruction.getClass().getSimpleName()));
             }
-
-
             // 执行指令
             instruction.execute(frame);
 
