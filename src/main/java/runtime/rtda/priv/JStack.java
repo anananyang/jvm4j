@@ -30,17 +30,21 @@ public class JStack {
 
     public Frame pop() {
         if (list.isEmpty()) {
-            throw new RuntimeException("jvm stack is empty!");
+            throw new RuntimeException("jthread stack is empty!");
         }
         int maxIndex = list.size() - 1;
         return list.remove(maxIndex);
     }
 
     public Frame top() {
-        if (list.isEmpty()) {
-            throw new RuntimeException("jvm stack is empty!");
+        if (isEmpty()) {
+            return null;
         }
         int maxIndex = list.size() - 1;
         return list.get(maxIndex);
+    }
+
+    public boolean isEmpty() {
+        return list.isEmpty();
     }
 }

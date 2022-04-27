@@ -2,7 +2,7 @@ package runtime.rtda.share.heap;
 import classFile.MemberInfo;
 
 /**
- * 字段信息
+ * 字段、方法信息
  */
 public class JClassMember {
     protected int accessFlags;

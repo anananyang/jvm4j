@@ -11,7 +11,6 @@ public class LocalVariableTable {
     private Slot[] slots;
 
     public LocalVariableTable(int maxLocal) {
-        assert maxLocal > 0;
         this.slots = new Slot[maxLocal];
     }
 
@@ -96,6 +95,13 @@ public class LocalVariableTable {
         return (JObject) slots[idx].get();
     }
 
+    public Slot getSlot(int index) {
+        return slots[index];
+    }
+
+    public Slot setSlot(int index, Slot slot) {
+        return slots[index] = slot;
+    }
 
     public void printSlots() {
         for (int i = 0; i < slots.length; i++) {

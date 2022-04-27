@@ -98,6 +98,10 @@ public class ClassFile {
      * @return
      */
     public String getSuperName() {
+        // 没有父类
+        if(superClass == 0) {
+            return null;
+        }
         return constantPool.getClassName(superClass);
     }
 

@@ -33,6 +33,8 @@ public class JClass {
     private int staticSlotCount;
     // 存放静态变量
     private Slots staticVars;
+    // 类的初始化是否已经开始
+    private boolean initStarted = false;
 
     public JClass(ClassFile classFile) {
         this.accessFlags = classFile.getAccessFlag();
@@ -204,26 +206,24 @@ public class JClass {
     }
 
     public JField lookupField(String name, String descriptor) {
-        // 先搜索当前类
+        // 先搜索当前类以及父类
         JField field = lookupThisClassField(name, descriptor);
-        if (field != null) {
-            return field;
+        if (field == null) {
+            field = lookupInterfacesField(name, descriptor);
         }
-        field = lookupInterfacesField(name, descriptor);
-        if (field != null) {
-            return field;
-        }
-        return lookupSuperClassField(name, descriptor);
+        return field;
     }
 
     private JField lookupThisClassField(String name, String descriptor) {
-        JField[] fields = this.fields;
-        if (fields == null || fields.length == 0) {
-            return null;
-        }
-        for (JField field : fields) {
-            if (name.equals(field.getName()) && descriptor.equals(field.getDescriptor())) {
-                return field;
+        for (JClass c = this; c != null; c = c.superClass) {
+            JField[] fields = this.fields;
+            if (fields == null) {
+                return null;
+            }
+            for (JField field : fields) {
+                if (name.equals(field.getName()) && descriptor.equals(field.getDescriptor())) {
+                    return field;
+                }
             }
         }
         return null;
@@ -244,13 +244,47 @@ public class JClass {
         return null;
     }
 
-    private JField lookupSuperClassField(String name, String descriptor) {
-        JClass superClass = this.superClass;
-        if (superClass == null) {
+
+    public JMethod lookupMethod(String name, String descriptor) {
+        // 先搜索当前类以及父类的方法
+        JMethod jMethod = lookupThisClassMethod(name, descriptor);
+        // 再搜索接口中的方法
+        if (jMethod == null) {
+            jMethod = lookupInterfaceMethod(name, descriptor);
+        }
+        return jMethod;
+    }
+
+    private JMethod lookupThisClassMethod(String name, String descriptor) {
+        for (JClass c = this; c != null; c = c.superClass) {
+            JMethod[] methods = c.getMethods();
+            if (methods == null) {
+                continue;
+            }
+            for (JMethod method : methods) {
+                if (name.equals(method.getName()) && descriptor.equals(method.getDescriptor())) {
+                    return method;
+                }
+            }
+        }
+        return null;
+    }
+
+    private JMethod lookupInterfaceMethod(String name, String descriptor) {
+        JClass[] interfaces = this.interfaces;
+        if (interfaces == null) {
             return null;
         }
-        return superClass.lookupField(name, descriptor);
+        JMethod jMethod = null;
+        for (JClass jInterface : interfaces) {
+            jMethod = jInterface.lookupMethod(name, descriptor);
+            if (jMethod != null) {
+                return jMethod;
+            }
+        }
+        return null;
     }
+
 
     public boolean isSubClassOf(JClass parent) {
         for (JClass c = superClass; c != null; c = c.getSuperClass()) {
@@ -259,6 +293,10 @@ public class JClass {
             }
         }
         return false;
+    }
+
+    public boolean isSuperClassOf(JClass child) {
+        return child.isSubClassOf(this);
     }
 
     public JObject newObject() {
@@ -295,29 +333,38 @@ public class JClass {
         if (interfaces == null) {
             return false;
         }
-        for(JClass superInterface : interfaces) {
-            if(superInterface == iface || superInterface.isSubInterfaceOf(iface)) {
+        for (JClass superInterface : interfaces) {
+            if (superInterface == iface || superInterface.isSubInterfaceOf(iface)) {
                 return true;
             }
         }
         return false;
     }
+
     public JMethod getMainMethod() {
         return getStaticMethod("main", "([Ljava/lang/String;)V");
     }
 
     public JMethod getStaticMethod(String name, String descriptor) {
         JMethod[] methods = this.methods;
-        if(methods == null) {
+        if (methods == null) {
             return null;
         }
-        for(JMethod method : methods) {
-            if(method.isStatic()) {
-                if(name.equals(method.getName()) && descriptor.equals(method.getDescriptor())) {
+        for (JMethod method : methods) {
+            if (method.isStatic()) {
+                if (name.equals(method.getName()) && descriptor.equals(method.getDescriptor())) {
                     return method;
                 }
             }
         }
         return null;
+    }
+
+    public boolean isInitStarted() {
+        return initStarted;
+    }
+
+    public void setInitStarted(boolean initStarted) {
+        this.initStarted = initStarted;
     }
 }

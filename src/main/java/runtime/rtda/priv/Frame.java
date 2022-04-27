@@ -1,5 +1,6 @@
 package runtime.rtda.priv;
 
+import runtime.instructions.ByteCodeReader;
 import runtime.rtda.share.heap.JMethod;
 
 /**
@@ -16,6 +17,8 @@ public class Frame {
     private JMethod jMethod;
     // 下一条指令的位置
     private int nextPC;
+    // 字节码读取
+    private ByteCodeReader byteCodeReader;
 
     /**
      * 本地变量表、以及操作数栈的大小是由编译器计算好的
@@ -31,6 +34,8 @@ public class Frame {
 
     public Frame(JThread jThread, JMethod jMethod) {
         this.jThread = jThread;
+        this.jMethod = jMethod;
+        this.byteCodeReader = new ByteCodeReader(jMethod.getCode());
         this.localVaribleTable = new LocalVariableTable(jMethod.getMaxLocals());
         this.operandStack = new OperandStack(jMethod.getMaxStack());
     }
@@ -61,5 +66,9 @@ public class Frame {
 
     public void setjMethod(JMethod jMethod) {
         this.jMethod = jMethod;
+    }
+
+    public ByteCodeReader getByteCodeReader() {
+        return byteCodeReader;
     }
 }

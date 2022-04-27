@@ -8,7 +8,6 @@ public class OperandStack {
     private int size;
 
     public OperandStack(int maxStack) {
-        assert maxStack > 0;
         this.slots = new Slot[maxStack];
     }
 
@@ -104,4 +103,13 @@ public class OperandStack {
         slots[size] = null;
         return slot;
     }
+
+    public JObject getRefFromTop(int n) {
+        int index = size - 1 - n;
+        if(index < 0) {
+            return null;
+        }
+        return (JObject) slots[index].get();
+    }
+
 }

@@ -10,9 +10,7 @@ import runtime.instructions.comparisons.ifcond.*;
 import runtime.instructions.comparisons.ificmp.*;
 import runtime.instructions.comparisons.lcmp.LCMP;
 import runtime.instructions.constants.*;
-import runtime.instructions.control.GOTO;
-import runtime.instructions.control.LOOKUP_SWITCH;
-import runtime.instructions.control.TABLE_SWITCH;
+import runtime.instructions.control.*;
 import runtime.instructions.conversions.d2x.D2F;
 import runtime.instructions.conversions.d2x.D2I;
 import runtime.instructions.conversions.d2x.D2L;
@@ -213,6 +211,13 @@ public abstract class InstructionFactory {
         nopInsctructionMap.put(0x97, new DCMPL());
         nopInsctructionMap.put(0x98, new DCMPG());
 
+        nopInsctructionMap.put(0xac, new IRETURN());
+        nopInsctructionMap.put(0xad, new LRETURN());
+        nopInsctructionMap.put(0xae, new FRETURN());
+        nopInsctructionMap.put(0xaf, new DRETURN());
+        nopInsctructionMap.put(0xb0, new ARETURN());
+        nopInsctructionMap.put(0xb1, new RETURN());
+
 
     }
 
@@ -262,6 +267,12 @@ public abstract class InstructionFactory {
         insctructionClassMap.put(0xb3, PUT_STATIC.class);
         insctructionClassMap.put(0xb4, GET_FIELD.class);
         insctructionClassMap.put(0xb5, PUT_FIELD.class);
+        insctructionClassMap.put(0xb6, INVOKE_VIRTUAL.class);
+        insctructionClassMap.put(0xb7, INVOKE_SPECIAL.class);
+        insctructionClassMap.put(0xb8, INVOKE_STATIC.class);
+        insctructionClassMap.put(0xb9, INVOKE_INTERFACE.class);
+
+        insctructionClassMap.put(0xbb, NEW.class);
 
         insctructionClassMap.put(0xc0, CHECKCAST.class);
         insctructionClassMap.put(0xc1, INSTANCEOF.class);

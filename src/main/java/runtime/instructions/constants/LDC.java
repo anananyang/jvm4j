@@ -7,6 +7,9 @@ import runtime.rtda.priv.OperandStack;
 import runtime.rtda.share.heap.rtcp.JConstant;
 import runtime.rtda.share.heap.rtcp.RuntimeConstantPool;
 
+/**
+ * 从运行时常量池取出一个常量，压到操作数栈
+ */
 public class LDC extends Index8Instruction {
 
     @Override

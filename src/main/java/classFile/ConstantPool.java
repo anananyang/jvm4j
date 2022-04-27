@@ -29,7 +29,7 @@ public class ConstantPool {
     }
 
     public ConstantInfo getByIndex(int index) {
-        if (index == 0 || index >= constants.length) {
+        if (index >= constants.length) {
             throw new RuntimeException("Invalid constant pool index!");
         }
         return constants[index];

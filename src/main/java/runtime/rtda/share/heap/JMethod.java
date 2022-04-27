@@ -9,15 +9,33 @@ public class JMethod extends JClassMember {
     private int maxLocals;
     private int maxStack;
     private byte[] code;
+    private int argSlotCount;
+    private MethodDescriptor methodDescriptor;
 
     public JMethod(JClass jClass, MemberInfo memberInfo) {
         super(jClass, memberInfo);
+        this.copyCodeAttribute(memberInfo);
+        this.methodDescriptor = new MethodDescriptor(memberInfo.getDescriptor());
+        this.argSlotCount = calcArgsCount();
+    }
+
+    private void copyCodeAttribute(MemberInfo memberInfo) {
         CodeAttributeInfo codeAttributeInfo = (CodeAttributeInfo) memberInfo.getFirstAttrByType(AttributeType.Code);
-        if (codeAttributeInfo != null) {
-            this.maxLocals = codeAttributeInfo.getMaxLocal();
-            this.maxStack = codeAttributeInfo.getMaxStack();
-            this.code = codeAttributeInfo.getCode();
+        if (codeAttributeInfo == null) {
+            return;
         }
+        this.maxLocals = codeAttributeInfo.getMaxLocal();
+        this.maxStack = codeAttributeInfo.getMaxStack();
+        this.code = codeAttributeInfo.getCode();
+    }
+
+    private int calcArgsCount() {
+        int count = methodDescriptor.getParamCount();
+        // 不是静态，会有一个 this 指针
+        if (!isStatic()) {
+            count++;
+        }
+        return count;
     }
 
     public int getMaxLocals() {
@@ -30,6 +48,10 @@ public class JMethod extends JClassMember {
 
     public byte[] getCode() {
         return code;
+    }
+
+    public int getArgSlotCount() {
+        return argSlotCount;
     }
 
     public boolean isPulic() {
@@ -81,4 +103,21 @@ public class JMethod extends JClassMember {
     }
 
 
+    public boolean isAccessibleTo(JClass other) {
+        // 公共访问权限
+        if (isPulic()) {
+            return true;
+        }
+        // prtected 权限：子类能访问、在相同的包下能访问，或者就是同一个类
+        JClass jClass = this.jClass;
+        if (isProtected()) {
+            return other.isSubClassOf(jClass) || jClass.isSamePackage(other) || other == jClass;
+        }
+        // 包访问权限
+        if (!isPrivate()) {
+            return jClass.isSamePackage(other);
+        }
+        // 私有访问权限，只有统一个类能访问
+        return jClass == other;
+    }
 }

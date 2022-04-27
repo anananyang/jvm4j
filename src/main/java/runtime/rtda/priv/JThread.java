@@ -24,7 +24,11 @@ public class JThread {
         return stack.pop();
     }
 
-    public Frame curFrame() {
+    public Frame topFrame() {
         return stack.top();
+    }
+
+    public boolean isStackEmpty() {
+        return stack.isEmpty();
     }
 }
