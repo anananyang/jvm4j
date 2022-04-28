@@ -21,13 +21,10 @@ public class JClassLoader {
     public JClass loadClass(String className) {
         JClass jClass = classMap.get(className);
         if (jClass == null) {
-            /**
-             * 数组类和普通类有很大的不同，它的数据并不来自 class 文件，而是由
-             * java 虚拟机在运行时期间生成
-             */
-            jClass = loadNonArrayClass(className);
+            jClass = className.startsWith("[")
+                    ? loadArrayClass(className)   // 加载数组类
+                    : loadNonArrayClass(className);
         }
-
         return jClass;
     }
 
@@ -208,7 +205,13 @@ public class JClassLoader {
 //                staticVars.(slotId, (double) constantPool.getValueByIndex(valueIndex));
                 throw new RuntimeException("not support string");
         }
+    }
 
+    private JClass loadArrayClass(String className) {
+        JClass jClass = new JClass(className, this);
+        // 加入方法区
+        classMap.put(className, jClass);
+        return jClass;
     }
 
 }

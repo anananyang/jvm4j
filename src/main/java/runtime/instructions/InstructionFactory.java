@@ -30,6 +30,7 @@ import runtime.instructions.loads.dload.*;
 import runtime.instructions.loads.fload.*;
 import runtime.instructions.loads.iload.*;
 import runtime.instructions.loads.lload.*;
+import runtime.instructions.loads.xload.*;
 import runtime.instructions.math.arithmetic.add.DADD;
 import runtime.instructions.math.arithmetic.add.FADD;
 import runtime.instructions.math.arithmetic.add.IADD;
@@ -72,6 +73,7 @@ import runtime.instructions.store.dstore.*;
 import runtime.instructions.store.fstore.*;
 import runtime.instructions.store.istore.*;
 import runtime.instructions.store.lstore.*;
+import runtime.instructions.store.xstore.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -121,6 +123,14 @@ public abstract class InstructionFactory {
         nopInsctructionMap.put(0x2b, new ALOAD_1());
         nopInsctructionMap.put(0x2c, new ALOAD_2());
         nopInsctructionMap.put(0x2d, new ALOAD_3());
+        nopInsctructionMap.put(0x2e, new IALOAD());
+        nopInsctructionMap.put(0x2f, new LALOAD());
+        nopInsctructionMap.put(0x30, new FALOAD());
+        nopInsctructionMap.put(0x31, new DALOAD());
+        nopInsctructionMap.put(0x32, new AALOAD());
+        nopInsctructionMap.put(0x33, new BALOAD());
+        nopInsctructionMap.put(0x34, new CALOAD());
+        nopInsctructionMap.put(0x35, new SALOAD());
 
         nopInsctructionMap.put(0x3b, new ISTORE_0());
         nopInsctructionMap.put(0x3c, new ISTORE_1());
@@ -142,6 +152,15 @@ public abstract class InstructionFactory {
         nopInsctructionMap.put(0x4c, new ASTORE_1());
         nopInsctructionMap.put(0x4d, new ASTORE_2());
         nopInsctructionMap.put(0x4e, new ASTORE_3());
+        nopInsctructionMap.put(0x4f, new IASTORE());
+        nopInsctructionMap.put(0x50, new LASTORE());
+        nopInsctructionMap.put(0x51, new FASTORE());
+        nopInsctructionMap.put(0x52, new DASTORE());
+        nopInsctructionMap.put(0x53, new AASTORE());
+        nopInsctructionMap.put(0x54, new BASTORE());
+        nopInsctructionMap.put(0x55, new CASTORE());
+        nopInsctructionMap.put(0x56, new SASTORE());
+
 
 
         nopInsctructionMap.put(0x57, new POP());
@@ -218,6 +237,8 @@ public abstract class InstructionFactory {
         nopInsctructionMap.put(0xb0, new ARETURN());
         nopInsctructionMap.put(0xb1, new RETURN());
 
+        nopInsctructionMap.put(0xbe, new ARRAY_LENGTH());
+
 
     }
 
@@ -273,11 +294,13 @@ public abstract class InstructionFactory {
         insctructionClassMap.put(0xb9, INVOKE_INTERFACE.class);
 
         insctructionClassMap.put(0xbb, NEW.class);
+        insctructionClassMap.put(0xbc, NEW_ARRAY.class);
+        insctructionClassMap.put(0xbd, ANEW_ARRAY.class);
 
         insctructionClassMap.put(0xc0, CHECKCAST.class);
         insctructionClassMap.put(0xc1, INSTANCEOF.class);
         insctructionClassMap.put(0xc4, WIDE.class);
-
+        insctructionClassMap.put(0xc5, MULTI_ANEW_ARRAY.class);
         insctructionClassMap.put(0xc6, IFNULL.class);
         insctructionClassMap.put(0xc7, IFNONNULL.class);
         insctructionClassMap.put(0xc8, GOTO_W.class);

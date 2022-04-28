@@ -34,7 +34,7 @@ public class MethodDescriptor {
         return !charReader.hasNext();
     }
 
-    // (Ljava/lang/String;IL)V
+    // (Ljava/lang/String;Ljava/lang/String)V
     private void parseParamTypes(CharReader charReader) {
         int start = charReader.getNext();
         if ('(' != start) {
@@ -69,10 +69,12 @@ public class MethodDescriptor {
                 StringBuilder sb = new StringBuilder(c);
                 while (charReader.hasNext()) {
                     char c1 = charReader.getNext();
-                    if(c1 == ')') {
+                    // 所有的参数类型都处理完了
+                    if (c1 == ')') {
                         charReader.back();
                         break;
                     }
+                    // object type 以 ; 结尾
                     else if (c1 == ';') {
                         break;
                     }

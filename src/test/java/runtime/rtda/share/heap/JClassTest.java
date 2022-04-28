@@ -18,15 +18,22 @@ public class JClassTest {
 //        String className = "GaussLongTest";
 //        String className = "MyObject";
 //        String className = "InvokerDemo";
-        String className = "FibonacciTest";
+//        String className = "FibonacciTest";
+
+
+        String[] classNames = {"GaussLongTest", "MyObject", "InvokerDemo", "FibonacciTest", "BubbleSortTest"};
 
         ClassPath classPath = new ClassPath(xjre, classpath);
         JClassLoader loader = new JClassLoader(classPath);
-        JClass jClass = loader.loadClass(className);
-        JMethod mainMethod = jClass.getMainMethod();
-        if (mainMethod == null) {
-            throw new RuntimeException("main method not found");
+        for(String className : classNames) {
+
+            System.out.println("--------- " + className + "-------------");
+            JClass jClass = loader.loadClass(className);
+            JMethod mainMethod = jClass.getMainMethod();
+            if (mainMethod == null) {
+                throw new RuntimeException("main method not found");
+            }
+            Interpreter.interpret(mainMethod, false);
         }
-        Interpreter.interpret(mainMethod, false);
     }
 }

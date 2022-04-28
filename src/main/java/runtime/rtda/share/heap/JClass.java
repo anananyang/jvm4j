@@ -3,7 +3,7 @@ package runtime.rtda.share.heap;
 import classFile.ClassFile;
 import classFile.MemberInfo;
 import eum.AccessFlag;
-import runtime.rtda.Slot;
+import eum.ArrayType;
 import runtime.rtda.priv.Frame;
 import runtime.rtda.priv.JThread;
 import runtime.rtda.share.heap.rtcp.RuntimeConstantPool;
@@ -46,6 +46,22 @@ public class JClass {
         this.constantPool = new RuntimeConstantPool(this, classFile.getConstantPool());
         this.fields = getFields(classFile.getFileds());
         this.methods = getMethods(classFile.getMethods());
+    }
+
+    /**
+     * 用于构造数组类
+     */
+    public JClass(String name, JClassLoader loader) {
+        assert name.startsWith("[");
+        this.thisClassName = name;
+        this.loader = loader;
+        this.superClassName = "java/lang/Object";
+        this.interfaceNames = new String[]{"java/lang/Cloneable", "java/io/Serializable"};
+        this.superClass = loader.loadClass(superClassName);
+        this.interfaces = new JClass[]{
+                loader.loadClass(interfaceNames[0]),
+                loader.loadClass(interfaceNames[1]),
+        };
     }
 
     private JField[] getFields(MemberInfo[] memberInfos) {
@@ -305,13 +321,54 @@ public class JClass {
         return new JObject(this);
     }
 
-    public boolean isAssignableFrom(JClass other) {
-        JClass curClass = this;
+    public boolean isAssignableFrom(JClass source) {
+        JClass target = this;
         // 两个 class 是同一个
-        if (other == curClass) {
+        if (target == source) {
             return true;
         }
-        return isInterface() ? other.isImplements(curClass) : other.isSubClassOf(curClass);
+        // 如果是数组
+        if (!source.isArray()) {
+            if (!source.isInterface()) {
+                if (!target.isInterface()) {
+                    return source.isSubClassOf(source);
+                } else {
+                    return source.isImplements(target);
+                }
+            } else {
+                if (!target.isInterface()) {
+                    return target.isJavaLangObject();  // 任何非基础类型可以向上转型为 java/lang/Object
+                } else {
+                    return target.isSuperInterfaceOf(source);  // 两个都是接口
+                }
+            }
+        } else {
+            if (!target.isArray()) {
+                if (!target.isInterface()) {
+                    return target.isJavaLangObject();  // 数组可以向上转型为 Object
+                } else {
+                    // 数组实现了以下两个接口，所以可以向上转型成这两个接口类型
+                    return target.isJavaLangCloneable() || target.isJavaIoSerializable();
+                }
+            } else {
+                // 判断两个数组的组建类型是否相等（包含了多维数组的判断）
+                JClass sourceClass = source.getComponentClass();
+                JClass targetClass = target.getComponentClass();
+                return sourceClass == targetClass || targetClass.isAssignableFrom(sourceClass);
+            }
+        }
+    }
+
+    public boolean isJavaLangObject() {
+        return "java/lang/Object".equals(thisClassName);
+    }
+
+    public boolean isJavaLangCloneable() {
+        return "java/lang/Cloneable".equals(thisClassName);
+    }
+
+    public boolean isJavaIoSerializable() {
+        return "java/io/Serializable".equals(thisClassName);
     }
 
     public boolean isImplements(JClass iface) {
@@ -328,6 +385,10 @@ public class JClass {
         }
 
         return false;
+    }
+
+    public boolean isSuperInterfaceOf(JClass iface) {
+        return iface.isSubInterfaceOf(this);
     }
 
     public boolean isSubInterfaceOf(JClass iface) {
@@ -382,15 +443,129 @@ public class JClass {
         this.initStarted = true;
         // 再初始化当前类（先入栈的后初始化）
         JMethod cinitMethod = getMethod("<clinit>", "()V", true);
-        if(cinitMethod != null) {
+        if (cinitMethod != null) {
             Frame frame = jThread.newFrame(cinitMethod);
             jThread.pushFrame(frame);
         }
         // 先初始化父类(后入栈的先初始化)
-        if(!this.isInterface()) {
-            if(superClass != null && !superClass.isInitStarted()) {
+        if (!this.isInterface()) {
+            if (superClass != null && !superClass.isInitStarted()) {
                 superClass.initClass(jThread);
             }
         }
+    }
+
+    /**
+     * 构造一个新数组
+     *
+     * @param count
+     * @return
+     */
+    public JObject newArray(int count) {
+        if (!isArray()) {
+            throw new RuntimeException("Not array classs [" + thisClassName + "]");
+        }
+        switch (thisClassName) {
+            // 布尔类型数组
+            case "[Z":
+                return new JObject(this, new Boolean[count]);
+            case "[B":
+                return new JObject(this, new Byte[count]);
+            case "[C":
+                return new JObject(this, new Character[count]);
+            case "[S":
+                return new JObject(this, new Short[count]);
+            case "[I":
+                return new JObject(this, new Integer[count]);
+            case "[J":
+                return new JObject(this, new Long[count]);
+            case "[F":
+                return new JObject(this, new Float[count]);
+            case "[D":
+                return new JObject(this, new Double[count]);
+            // 对象数组
+            default:
+                return new JObject(this, new JObject[count]);
+        }
+    }
+
+    public JClass getArrayClass() {
+        if (isArray()) {
+            return this;
+        }
+        String name = getArrayClassName();
+        return loader.loadClass(name);
+    }
+
+    private String getArrayClassName() {
+        if (thisClassName.startsWith("[")) {
+            return "[" + thisClassName;
+        }
+        // 原始类型
+        String typeDesc = ArrayType.getTypeDescByType(thisClassName);
+        if (typeDesc != null) {
+            return typeDesc;
+        }
+        // 对象类型数组
+        return "[L" + thisClassName + ";";
+    }
+
+    /**
+     * 判断当前类是不是数组类
+     *
+     * @return
+     */
+    public boolean isArray() {
+        return thisClassName.startsWith("[");
+    }
+
+    /**
+     * 创建多维数组
+     *
+     * @param counts
+     * @return
+     */
+    public JObject newMultiDimensionalArray(int[] counts, int dimensions) {
+        // 先创建当前层的数组
+        int count = counts[dimensions];
+        JObject arrayRef = this.newArray(count);
+        dimensions++;
+        // 还有嵌套
+        if (dimensions < counts.length) {
+            Object[] arr = arrayRef.getArray();
+            for (int i = 0; i < count; i++) {
+                JClass componentClass = getComponentClass();
+                arr[i] = newMultiDimensionalArray(counts, dimensions);
+            }
+        }
+        return arrayRef;
+    }
+
+    private JClass getComponentClass() {
+        String componentClassName = this.getComponentClassName();
+        return loader.loadClass(componentClassName);
+    }
+
+    private String getComponentClassName() {
+        if (!thisClassName.startsWith("[")) {
+            throw new RuntimeException("No array: " + thisClassName);
+        }
+        String componentTypeDesc = thisClassName.substring(1);
+        return toClassName(componentTypeDesc);
+    }
+
+    private String toClassName(String descriptor) {
+        if (descriptor.startsWith("[")) {
+            return descriptor;
+        }
+        if (descriptor.startsWith("L")) {
+            return descriptor.substring(1, descriptor.length() - 1);
+        }
+        // 原始类型
+        String className = ArrayType.getTypeByTypeDesc("[" + descriptor);
+        if (className == null) {
+            throw new RuntimeException("Invalid descriptor: " + descriptor);
+        }
+        return className;
     }
 }

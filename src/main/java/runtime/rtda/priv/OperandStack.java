@@ -25,7 +25,7 @@ public class OperandStack {
         pushSlot(slot);
     }
 
-    public int popByte() {
+    public byte popByte() {
         return (byte) popSlot().get();
     }
 
