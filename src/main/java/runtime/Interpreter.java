@@ -8,7 +8,7 @@ import runtime.instructions.Instruction;
 import runtime.instructions.InstructionFactory;
 import runtime.rtda.priv.Frame;
 import runtime.rtda.priv.JThread;
-import runtime.rtda.share.heap.JMethod;
+import runtime.rtda.share.heap.*;
 
 public class Interpreter {
 
@@ -63,8 +63,17 @@ public class Interpreter {
 
 
     public static void interpret(JMethod jMethod, boolean logInstructionInfo) {
+        interpret(jMethod, null, logInstructionInfo);
+    }
+
+    public static void interpret(JMethod jMethod, String[] args, boolean logInstructionInfo) {
         JThread jThread = new JThread();
         Frame frame = jThread.newFrame(jMethod);
+        // 设置 main 方法的执行参数
+        if (!isEmptyArr(args)) {
+            JObject jargs = createJArgsArray(jMethod.getjClass().getLoader(), args);
+            frame.getLocalVaribleTable().setRef(0, jargs);
+        }
         jThread.pushFrame(frame);
         try {
             loop(jThread, logInstructionInfo);   // 目前没有执行 ret 指令，所以会抛出异常
@@ -78,6 +87,21 @@ public class Interpreter {
                     jThread.topFrame().getjMethod().getDescriptor()));
             jThread.topFrame().getLocalVaribleTable().printSlots();
         }
+    }
+
+    private static <T> boolean isEmptyArr(T[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    private static JObject createJArgsArray(JClassLoader loader, String[] args) {
+        JClass stringClass = loader.loadClass("java/lang/String");
+        JObject jstrArrRef = stringClass.getArrayClass().newArray(args.length);
+        // 从数组对象中取出实际的数组
+        JObject[] refs = jstrArrRef.getRefArray();
+        for (int i = 0; i < args.length; i++) {
+            refs[i] = StringPool.getJString(loader, args[i]);
+        }
+        return jstrArrRef;
     }
 
     private static void loop(JThread jThread, boolean logInstructionInfo) {
@@ -96,7 +120,7 @@ public class Interpreter {
             instruction.fetchOperands(byteCodeReader);
             // 重新设置 PC，PC 在 reader 之后已经重新置位
             frame.setNextPC(byteCodeReader.getPc());
-            if(logInstructionInfo) {
+            if (logInstructionInfo) {
                 System.out.println(String.format("pc: %d, instruction: %s", pc, instruction.getClass().getSimpleName()));
             }
             // 执行指令

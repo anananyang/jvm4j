@@ -182,6 +182,7 @@ public class JClassLoader {
         if (valueIndex <= 0) {
             return;
         }
+        Object val = constantPool.getValueByIndex(valueIndex);
         int slotId = jField.getSlotId();
         switch (jField.getDescriptor()) {
             case "Z":
@@ -189,21 +190,22 @@ public class JClassLoader {
             case "C":
             case "S":
             case "I":
-                staticVars.setInt(slotId, (int) constantPool.getValueByIndex(valueIndex));
+                staticVars.setInt(slotId, (int) val);
                 break;
             case "J":
-                staticVars.setLong(slotId, (long) constantPool.getValueByIndex(valueIndex));
+                staticVars.setLong(slotId, (long) val);
                 break;
             case "F":
-                staticVars.setFloat(slotId, (float) constantPool.getValueByIndex(valueIndex));
+                staticVars.setFloat(slotId, (float) val);
                 break;
             case "D":
-                staticVars.setDouble(slotId, (double) constantPool.getValueByIndex(valueIndex));
+                staticVars.setDouble(slotId, (double) val);
                 break;
-
             case "Ljava/lang/String;":
-//                staticVars.(slotId, (double) constantPool.getValueByIndex(valueIndex));
-                throw new RuntimeException("not support string");
+                // 将字符串转换成当前虚拟机的字符串对象
+                JObject jstring = StringPool.getJString(jClass.getLoader(), (String) val);
+                staticVars.setRef(slotId, jstring);
+                break;
         }
     }
 

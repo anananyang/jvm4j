@@ -4,7 +4,9 @@ import eum.ConstantType;
 import runtime.instructions.base.Index8Instruction;
 import runtime.rtda.priv.Frame;
 import runtime.rtda.priv.OperandStack;
-import runtime.rtda.share.heap.rtcp.JConstant;
+import runtime.rtda.share.heap.JClassLoader;
+import runtime.rtda.share.heap.JObject;
+import runtime.rtda.share.heap.StringPool;
 import runtime.rtda.share.heap.rtcp.RuntimeConstantPool;
 
 /**
@@ -17,14 +19,21 @@ public class LDC extends Index8Instruction {
         OperandStack stack = frame.getOperandStack();
         RuntimeConstantPool constantPool = frame.getjMethod().getjClass().getConstantPool();
         ConstantType constantType = constantPool.getTypeByIndex(index);
+        Object val = constantPool.getValueByIndex(index);
         switch (constantType) {
             case CONSTANT_Integer:
-                stack.pushInt((int) constantPool.getValueByIndex(index));
+                stack.pushInt((int) val);
                 break;
             case CONSTANT_Float:
-                stack.pushFloat((float) constantPool.getValueByIndex(index));
+                stack.pushFloat((float) val);
                 break;
             // 字符串、jClass
+            case CONSTANT_String:
+                // 从字符串常量池取出字符串对象
+                JClassLoader loader = constantPool.getjClass().getLoader();
+                JObject jstring = StringPool.getJString(loader, (String) val);
+                stack.pushRef(jstring);
+                break;
             default:
                 throw new RuntimeException("not support ldc [" + constantType.name() + "]");
         }

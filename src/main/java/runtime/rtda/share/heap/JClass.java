@@ -412,7 +412,7 @@ public class JClass {
         return getMethod(name, descriptor, true);
     }
 
-    private JMethod getMethod(String name, String descriptor, boolean isStatic) {
+    public JMethod getMethod(String name, String descriptor, boolean isStatic) {
         JMethod[] methods = this.methods;
         if (methods == null) {
             return null;
@@ -426,6 +426,23 @@ public class JClass {
         }
         return null;
     }
+
+
+    public JField getField(String name, String descriptor, boolean isStatic) {
+        JField[] fields = this.fields;
+        if (fields == null) {
+            return null;
+        }
+        for (JField field : fields) {
+            if (field.isStatic() == isStatic) {
+                if (name.equals(field.getName()) && descriptor.equals(field.getDescriptor())) {
+                    return field;
+                }
+            }
+        }
+        return null;
+    }
+
 
     public boolean isInitStarted() {
         return initStarted;

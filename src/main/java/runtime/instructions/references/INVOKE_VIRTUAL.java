@@ -7,6 +7,7 @@ import runtime.rtda.priv.OperandStack;
 import runtime.rtda.share.heap.JClass;
 import runtime.rtda.share.heap.JMethod;
 import runtime.rtda.share.heap.JObject;
+import runtime.rtda.share.heap.StringPool;
 import runtime.rtda.share.heap.rtcp.RuntimeConstantPool;
 import runtime.rtda.share.heap.rtcp.ref.MethodRef;
 
@@ -23,7 +24,7 @@ public class INVOKE_VIRTUAL extends Index16Instruction {
         if (ref == null) {
             // hack
             if("println".equals(methodRef.getName())) {
-                printMsg(methodRef, frame);
+                println(methodRef, frame);
                 return;
             }
             throw new NullPointerException();
@@ -57,7 +58,7 @@ public class INVOKE_VIRTUAL extends Index16Instruction {
         return (MethodRef) constantPool.getValueByIndex(index);
     }
 
-    private void printMsg(MethodRef methodRef, Frame frame) {
+    private void println(MethodRef methodRef, Frame frame) {
         OperandStack stack = frame.getOperandStack();
         switch (methodRef.getDescriptor()) {
             case "(Z)V":
@@ -75,6 +76,10 @@ public class INVOKE_VIRTUAL extends Index16Instruction {
                 break;
             case "(D)V":
                 System.out.println(stack.popDouble());
+                break;
+            case "(Ljava/lang/String;)V":
+                JObject jstring = stack.popRef();
+                System.out.println(StringPool.getRealString(jstring));
                 break;
             default:
                 System.out.println("println: " + methodRef.getDescriptor());

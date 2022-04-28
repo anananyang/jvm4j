@@ -2,7 +2,7 @@ package runtime.rtda.share.heap;
 
 public class JObject {
     private JClass jClass;
-    // 兼容数组和普通对象的字段
+    // 兼容数组、字符串以及普通对象的字段
     private Object data;
 
     /**
@@ -15,6 +15,12 @@ public class JObject {
         this.data = new Slots(jClass.getInstanceSlotCount());
     }
 
+    /**
+     * 用于构造数组对象的构造器
+     *
+     * @param jClass
+     * @param data
+     */
     public JObject(JClass jClass, Object[] data) {
         this.jClass = jClass;
         this.data = data;
@@ -74,5 +80,17 @@ public class JObject {
 
     public int getArrayLength() {
         return ((Object[]) data).length;
+    }
+
+    public void setRefVar(String name, String descriptor, JObject val) {
+        JField jField = jClass.getField(name, descriptor, false);
+        Slots slots = (Slots) data;
+        slots.setRef(jField.getSlotId(), val);
+    }
+
+    public JObject getRefVar(String name, String descriptor) {
+        JField jField = jClass.getField(name, descriptor, false);
+        Slots slots = (Slots) data;
+        return slots.getRef(jField.getSlotId());
     }
 }
