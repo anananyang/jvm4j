@@ -66,24 +66,25 @@ public class PUT_STATIC extends Index16Instruction {
         int slotId = jField.getSlotId();
         // 字段的类型
         String descriptor = jField.getDescriptor();
-        switch (descriptor) {
-            case "Z":
-            case "B":
-            case "C":
-            case "S":
-            case "I":
+        switch (descriptor.charAt(0)) {
+            case 'Z':
+            case 'B':
+            case 'C':
+            case 'S':
+            case 'I':
                 slots.setInt(slotId, frame.getOperandStack().popInt());
                 break;
-            case "F":
+            case 'F':
                 slots.setFloat(slotId, frame.getOperandStack().popFloat());
                 break;
-            case "J":
+            case 'J':
                 slots.setLong(slotId, frame.getOperandStack().popLong());
                 break;
-            case "D":
+            case 'D':
                 slots.setDouble(slotId, frame.getOperandStack().popDouble());
                 break;
-            case "L":
+            case 'L':
+            case '[':
                 slots.setRef(slotId, frame.getOperandStack().popRef());
                 break;
         }

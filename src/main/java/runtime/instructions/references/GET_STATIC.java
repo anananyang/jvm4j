@@ -38,25 +38,25 @@ public class GET_STATIC extends Index16Instruction {
         int slotId = field.getSlotId();
         OperandStack stack = frame.getOperandStack();
         String descriptor = field.getDescriptor();
-        switch (descriptor) {
-            case "Z":
-            case "B":
-            case "C":
-            case "S":
-            case "I":
+        switch (descriptor.charAt(0)) {
+            case 'Z':
+            case 'B':
+            case 'C':
+            case 'S':
+            case 'I':
                 stack.pushInt(slots.getInt(slotId));
                 break;
-            case "F":
+            case 'F':
                 stack.pushFloat(slots.getFloat(slotId));
                 break;
-            case "D":
+            case 'D':
                 stack.pushDouble(slots.getDouble(slotId));
                 break;
-            case "J":
+            case 'J':
                 stack.pushLong(slots.getLong(slotId));
                 break;
-            case "L":
-            case "[":   // 数组
+            case 'L':
+            case '[':   // 数组
                 stack.pushRef(slots.getRef(slotId));
                 break;
         }

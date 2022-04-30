@@ -14,9 +14,48 @@ public class JMethod extends JClassMember {
 
     public JMethod(JClass jClass, MemberInfo memberInfo) {
         super(jClass, memberInfo);
-        this.copyCodeAttribute(memberInfo);
         this.methodDescriptor = new MethodDescriptor(memberInfo.getDescriptor());
         this.argSlotCount = calcArgsCount();
+        // 调用 super 构造器设置过 accessFlag
+        if (isNative()) {
+            this.injectCodeAttribute();
+        } else {
+            this.copyCodeAttribute(memberInfo);
+        }
+    }
+
+    private void injectCodeAttribute() {
+        this.maxLocals = this.argSlotCount;
+        this.maxStack = 4;
+        byte[] code = null;
+        switch (methodDescriptor.getReturnType().charAt(0)) {
+            // return
+            case 'V':
+                code = new byte[]{(byte) 0xfe, (byte) 0xb1};
+                break;
+            // dreturn
+            case 'D':
+                code = new byte[]{(byte) 0xfe, (byte) 0xaf};
+                break;
+            // freturn
+            case 'F':
+                code = new byte[]{(byte) 0xfe, (byte) 0xae};
+                break;
+            // freturn
+            case 'J':
+                code = new byte[]{(byte) 0xfe, (byte) 0xad};
+                break;
+            case '[':
+            // areturn
+            case 'L':
+                code = new byte[]{(byte) 0xfe, (byte) 0xb0};
+                break;
+            // ireturn
+            default:
+                code = new byte[]{(byte) 0xfe, (byte) 0xac};
+                break;
+        }
+        this.code = code;
     }
 
     private void copyCodeAttribute(MemberInfo memberInfo) {

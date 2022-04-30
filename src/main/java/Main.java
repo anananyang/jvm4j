@@ -3,10 +3,7 @@ import classFile.reader.ClassReader;
 import classpath.ClassPath;
 import org.apache.commons.cli.*;
 
-import java.io.IOException;
-import java.util.Arrays;
-
-public class Jvm {
+public class Main {
 
     private static Options options = new Options();
 
@@ -19,9 +16,9 @@ public class Jvm {
     }
 
     public static void main(String[] args) {
-        Jvm jvm = new Jvm();
-        CommandLine cmd = jvm.parseCommandLine(args);
-        jvm.execute(cmd);
+        Main main = new Main();
+        CommandLine cmd = main.parseCommandLine(args);
+        main.execute(cmd);
     }
 
     public CommandLine parseCommandLine(String[] args) {
@@ -88,6 +85,4 @@ public class Jvm {
         }
         return sb.toString();
     }
-
-
 }

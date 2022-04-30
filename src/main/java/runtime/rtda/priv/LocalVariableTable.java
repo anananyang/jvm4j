@@ -112,4 +112,7 @@ public class LocalVariableTable {
         }
     }
 
+    public JObject getThis() {
+        return getRef(0);
+    }
 }

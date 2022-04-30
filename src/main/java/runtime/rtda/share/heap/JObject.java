@@ -4,6 +4,8 @@ public class JObject {
     private JClass jClass;
     // 兼容数组、字符串以及普通对象的字段
     private Object data;
+    // 额外信息
+    private Object extra;
 
     /**
      * 用于构造普通对象的构造器
@@ -93,4 +95,13 @@ public class JObject {
         Slots slots = (Slots) data;
         return slots.getRef(jField.getSlotId());
     }
+
+    public Object getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Object extra) {
+        this.extra = extra;
+    }
+
 }

@@ -3,6 +3,8 @@ package runtime.rtda.share.heap;
 import classFile.ClassFile;
 import classFile.ClassFileParser;
 import classpath.ClassPath;
+import eum.AccessFlag;
+import eum.PrimitiveType;
 import runtime.rtda.share.heap.rtcp.RuntimeConstantPool;
 
 import java.io.IOException;
@@ -14,8 +16,53 @@ public class JClassLoader {
     // 可以把 classMap 当前方法区
     Map<String, JClass> classMap = new HashMap<>();
 
+    private static final String[] arrayInterfaces = new String[]{"java/lang/Cloneable", "java/io/Serializable"};
+
     public JClassLoader(ClassPath classPath) {
         this.classPath = classPath;
+        // 加载 java/lang/Class 类
+        loadBasicClasses();
+        // 加载基本类型
+        loadPrimiviteClasses();
+    }
+
+    private void loadBasicClasses() {
+        JClass jlclass = this.loadClass("java/lang/Class");
+        if (classMap.isEmpty()) {
+            return;
+        }
+        for (Map.Entry<String, JClass> entry : classMap.entrySet()) {
+            JClass jClass = entry.getValue();
+            // 加载完成的类未绑定 class 对象
+            if (jClass.getClassObj() != null) {
+                continue;
+            }
+            JObject classObj = jlclass.newObject();
+            classObj.setExtra(jClass);
+            jClass.setClassObj(classObj);
+        }
+    }
+
+    private void loadPrimiviteClasses() {
+        for (PrimitiveType primitiveType : PrimitiveType.values()) {
+            loadPrimiviteClass(primitiveType);
+        }
+    }
+
+    private void loadPrimiviteClass(PrimitiveType primitiveType) {
+        JClass jClass = new JClass(AccessFlag.ACC_PUBLIC.getValue(),
+                primitiveType.getType(),
+                null,
+                null,
+                this,
+                true);
+        JClass jlclass = classMap.get("java/lang/Class");
+        JObject classObj = jlclass.newObject();
+        classObj.setExtra(jClass);
+        jClass.setClassObj(classObj);
+
+        // 放入方法区
+        classMap.put(primitiveType.getType(), jClass);
     }
 
     public JClass loadClass(String className) {
@@ -25,6 +72,14 @@ public class JClassLoader {
                     ? loadArrayClass(className)   // 加载数组类
                     : loadNonArrayClass(className);
         }
+        // 设置 class 对象（Class 类已经加载完成的情况下）
+        JClass jlclass = classMap.get("java/lang/Class");
+        if (jlclass != null) {
+            JObject classObj = jlclass.newObject();
+            classObj.setExtra(jClass);
+            jClass.setClassObj(classObj);
+        }
+
         return jClass;
     }
 
@@ -70,7 +125,7 @@ public class JClassLoader {
 
     private JClass resolveSupperClass(JClass jClass) {
         String superClassName = jClass.getSuperClassName();
-        if (superClassName == null || "java/lang/Object".equals(superClassName)) {
+        if (superClassName == null) {
             return null;
         }
         return loadClass(superClassName);
@@ -210,7 +265,12 @@ public class JClassLoader {
     }
 
     private JClass loadArrayClass(String className) {
-        JClass jClass = new JClass(className, this);
+        JClass jClass = new JClass(AccessFlag.ACC_PUBLIC.getValue(),
+                className,
+                "java/lang/Object",
+                arrayInterfaces,
+                this,
+                true);
         // 加入方法区
         classMap.put(className, jClass);
         return jClass;

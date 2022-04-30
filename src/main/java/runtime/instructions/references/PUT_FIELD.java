@@ -66,25 +66,25 @@ public class PUT_FIELD extends Index16Instruction {
         if (obj == null) {
             throw new NullPointerException();
         }
-        switch (descriptor) {
-            case "Z":
-            case "B":
-            case "C":
-            case "S":
-            case "I":
+        switch (descriptor.charAt(0)) {
+            case 'Z':
+            case 'B':
+            case 'C':
+            case 'S':
+            case 'I':
                 obj.getFields().setInt(slotId, (int) val);
                 break;
-            case "F":
+            case 'F':
                 obj.getFields().setFloat(slotId, (float) val);
                 break;
-            case "J":
+            case 'J':
                 obj.getFields().setLong(slotId, (long) val);
                 break;
-            case "D":
+            case 'D':
                 obj.getFields().setDouble(slotId, (double) val);
                 break;
-            case "L":
-            case "[":
+            case 'L':
+            case '[':
                 obj.getFields().setRef(slotId, (JObject) val);
                 break;
         }

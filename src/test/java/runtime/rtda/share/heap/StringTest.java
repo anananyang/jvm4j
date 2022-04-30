@@ -22,7 +22,7 @@ public class StringTest {
         if (mainMethod == null) {
             throw new RuntimeException("main method not found");
         }
-        Interpreter.interpret(mainMethod, args,false);
+        Interpreter.interpret(mainMethod, args,true);
 
     }
 }

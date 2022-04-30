@@ -1,14 +1,17 @@
 package runtime.rtda.priv;
 
 import runtime.rtda.Slot;
+import runtime.rtda.share.heap.JMethod;
 import runtime.rtda.share.heap.JObject;
 
 public class OperandStack {
     private Slot[] slots;
     private int size;
+    private JMethod jMethod;
 
-    public OperandStack(int maxStack) {
+    public OperandStack(int maxStack, JMethod jMethod) {
         this.slots = new Slot[maxStack];
+        this.jMethod = jMethod;
     }
 
     public void pushBoolean(boolean value) {
@@ -39,12 +42,14 @@ public class OperandStack {
     }
 
     public void pushChar(char value) {
-        Slot<Character> slot = new Slot<>(value);
+        Integer val = (int) value;
+        Slot<Integer> slot = new Slot<>(val);
         pushSlot(slot);
     }
 
     public char popChar() {
-        return (Character) popSlot().get();
+        int val = (int) popSlot().get();
+        return (char) val;
     }
 
     public void pushInt(int value) {
@@ -95,18 +100,25 @@ public class OperandStack {
     public void pushSlot(Slot slot) {
         slots[size] = slot;
         size++;
+//        if(jMethod != null){
+//            System.out.println(jMethod.getjClass().getThisClassName() + "." + jMethod.getName() + " push : " + slot.get());
+//        }
+
     }
 
     public Slot popSlot() {
         size--;
         Slot slot = slots[size];
         slots[size] = null;
+//        if(jMethod != null){
+//            System.out.println(jMethod.getjClass().getThisClassName() + "." + jMethod.getName() + " pop : " + slot.get());
+//        }
         return slot;
     }
 
     public JObject getRefFromTop(int n) {
         int index = size - 1 - n;
-        if(index < 0) {
+        if (index < 0) {
             return null;
         }
         return (JObject) slots[index].get();

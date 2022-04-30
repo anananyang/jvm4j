@@ -64,6 +64,7 @@ import runtime.instructions.math.bool.xor.LXOR;
 import runtime.instructions.math.incr.IINC;
 import runtime.instructions.math.shift.*;
 import runtime.instructions.references.*;
+import runtime.instructions.reserved.INVOKE_NATIVE;
 import runtime.instructions.stack.dup.*;
 import runtime.instructions.stack.pop.POP;
 import runtime.instructions.stack.pop.POP2;
@@ -162,7 +163,6 @@ public abstract class InstructionFactory {
         nopInsctructionMap.put(0x56, new SASTORE());
 
 
-
         nopInsctructionMap.put(0x57, new POP());
         nopInsctructionMap.put(0x58, new POP2());
         nopInsctructionMap.put(0x59, new DUP());
@@ -238,6 +238,9 @@ public abstract class InstructionFactory {
         nopInsctructionMap.put(0xb1, new RETURN());
 
         nopInsctructionMap.put(0xbe, new ARRAY_LENGTH());
+
+        // 保留指令，用于调用本地方法
+        nopInsctructionMap.put(0xfe, new INVOKE_NATIVE());
 
 
     }

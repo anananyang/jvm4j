@@ -4,6 +4,7 @@ import classFile.ClassFile;
 import classFile.MemberInfo;
 import eum.AccessFlag;
 import eum.ArrayType;
+import eum.PrimitiveType;
 import runtime.rtda.priv.Frame;
 import runtime.rtda.priv.JThread;
 import runtime.rtda.share.heap.rtcp.RuntimeConstantPool;
@@ -37,6 +38,8 @@ public class JClass {
     private Slots staticVars;
     // 类的初始化是否已经开始
     private boolean initStarted = false;
+    // class 对象， java 中的每个对象都与其 class 关联，而 JClass 关联着 class 对象，这样对象就可以通过 getClass 方法或者到 class 对象，进行相关的反射处理
+    private JObject classObj;
 
     public JClass(ClassFile classFile) {
         this.accessFlags = classFile.getAccessFlag();
@@ -48,21 +51,31 @@ public class JClass {
         this.methods = getMethods(classFile.getMethods());
     }
 
-    /**
-     * 用于构造数组类
-     */
-    public JClass(String name, JClassLoader loader) {
-        assert name.startsWith("[");
+    public JClass(int accessFlags,
+                  String name,
+                  String superClassName,
+                  String[] interfaceNames,
+                  JClassLoader loader,
+                  boolean initStarted
+    ) {
+        this.accessFlags = accessFlags;
         this.thisClassName = name;
         this.loader = loader;
-        this.superClassName = "java/lang/Object";
-        this.interfaceNames = new String[]{"java/lang/Cloneable", "java/io/Serializable"};
-        this.superClass = loader.loadClass(superClassName);
-        this.interfaces = new JClass[]{
-                loader.loadClass(interfaceNames[0]),
-                loader.loadClass(interfaceNames[1]),
-        };
+        this.superClassName = superClassName;
+        this.interfaceNames = interfaceNames;
+        if (superClassName != null) {
+            this.superClass = loader.loadClass(superClassName);
+        }
+        if (interfaceNames != null) {
+            this.interfaces = new JClass[interfaceNames.length];
+            for (int i = 0; i < interfaceNames.length; i++) {
+                this.interfaces[i] = loader.loadClass(interfaceNames[i]);
+            }
+
+        }
+        this.initStarted = initStarted;
     }
+
 
     private JField[] getFields(MemberInfo[] memberInfos) {
         if (memberInfos == null) {
@@ -134,6 +147,14 @@ public class JClass {
 
     public JClassLoader getLoader() {
         return loader;
+    }
+
+    public JObject getClassObj() {
+        return classObj;
+    }
+
+    public void setClassObj(JObject classObj) {
+        this.classObj = classObj;
     }
 
     public void setLoader(JClassLoader loader) {
@@ -234,7 +255,7 @@ public class JClass {
 
     private JField lookupThisClassField(String name, String descriptor) {
         for (JClass c = this; c != null; c = c.superClass) {
-            JField[] fields = this.fields;
+            JField[] fields = c.fields;
             if (fields == null) {
                 return null;
             }
@@ -558,7 +579,7 @@ public class JClass {
         return arrayRef;
     }
 
-    private JClass getComponentClass() {
+    public JClass getComponentClass() {
         String componentClassName = this.getComponentClassName();
         return loader.loadClass(componentClassName);
     }
@@ -585,4 +606,26 @@ public class JClass {
         }
         return className;
     }
+
+    public String getJavaName() {
+        return thisClassName.replace("/", ".");
+    }
+
+    public boolean isPrimitiveType() {
+        return PrimitiveType.getByType(thisClassName) != null;
+    }
+
+    /**
+     * 获取静态变量
+     *
+     * @param name
+     * @param descriptor
+     * @return
+     */
+    public JObject getRefVar(String name, String descriptor) {
+        JField jField = getField(name, descriptor, true);
+        Slots slots = (Slots) staticVars;
+        return slots.getRef(jField.getSlotId());
+    }
+
 }

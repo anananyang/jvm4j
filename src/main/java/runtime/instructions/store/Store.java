@@ -21,8 +21,8 @@ public class Store {
     }
 
     /**
-     * 从根据 index 从局部变量表获取一个 int 类型 value，
-     * 将 value 压入操作数栈
+     *  从操作数栈弹出一个 int 类型 value，
+     * 将 value 设置到局部变量表
      *
      * @param frame
      * @param index

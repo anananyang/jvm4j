@@ -38,7 +38,18 @@ public class StringPool {
     }
 
     public static String getRealString(JObject jstring) {
-        return jStringToStringMap.get(jstring);
+        if (jstring == null) {
+            return null;
+        }
+        String str = jStringToStringMap.get(jstring);
+        if (str != null) {
+            return str;
+        }
+        // 获取到数组对象
+        JObject charArrRef = jstring.getRefVar("value", "[C");
+        str = toRealString(charArrRef.getCharArray());
+
+        return str;
     }
 
     private static Character[] toCharacterArr(String str) {
@@ -48,6 +59,14 @@ public class StringPool {
             characters[i] = chars[i];
         }
         return characters;
+    }
+
+    private static String toRealString(Character[] charArr) {
+        char[] chars = new char[charArr.length];
+        for (int i = 0; i < chars.length; i++) {
+            chars[i] = charArr[i];
+        }
+        return new String(chars);
     }
 
 }

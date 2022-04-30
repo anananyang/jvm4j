@@ -30,9 +30,6 @@ public class INVOKE_VIRTUAL extends Index16Instruction {
             throw new NullPointerException();
         }
 
-
-
-
         // 验证 protected  方法的调用权限
         if (resolvedMethod.isProtected()
                 && resolvedMethod.getjClass().isSuperClassOf(curClass)
@@ -62,6 +59,8 @@ public class INVOKE_VIRTUAL extends Index16Instruction {
         OperandStack stack = frame.getOperandStack();
         switch (methodRef.getDescriptor()) {
             case "(Z)V":
+                System.out.println(stack.popInt() != 0);
+                break;
             case "(C)V":
             case "(B)V":
             case "(S)V":
@@ -83,8 +82,9 @@ public class INVOKE_VIRTUAL extends Index16Instruction {
                 break;
             default:
                 System.out.println("println: " + methodRef.getDescriptor());
-                stack.popRef();
 
         }
+        // pop System 的静态变量 out
+        stack.popRef();
     }
 }

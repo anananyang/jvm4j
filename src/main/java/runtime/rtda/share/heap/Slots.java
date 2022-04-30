@@ -59,7 +59,11 @@ public class Slots {
     }
 
     public int getInt(int idx) {
-        return (int) slots[idx].get();
+        Slot slot = slots[idx];
+        if(slot == null) {
+            return 0;
+        }
+        return (int) slot.get();
     }
 
     public void setLong(int idx, long value) {
@@ -68,7 +72,11 @@ public class Slots {
     }
 
     public long getLong(int idx) {
-        return (long) slots[idx].get();
+        Slot slot = slots[idx];
+        if(slot == null) {
+            return 0;
+        }
+        return (long) slot.get();
     }
 
     public void setFloat(int idx, float value) {
@@ -77,7 +85,11 @@ public class Slots {
     }
 
     public float getFloat(int idx) {
-        return (float) slots[idx].get();
+        Slot slot = slots[idx];
+        if(slot == null) {
+            return 0;
+        }
+        return (float) slot.get();
     }
 
     public void setDouble(int idx, double value) {
@@ -86,7 +98,11 @@ public class Slots {
     }
 
     public double getDouble(int idx) {
-        return (double) slots[idx].get();
+        Slot slot = slots[idx];
+        if(slot == null) {
+            return 0;
+        }
+        return (double) slot.get();
     }
 
     public void setRef(int idx, JObject value) {
@@ -95,7 +111,11 @@ public class Slots {
     }
 
     public JObject getRef(int idx) {
-        return (JObject) slots[idx].get();
+        Slot slot = slots[idx];
+        if(slot == null) {
+            return null;
+        }
+        return (JObject) slot.get();
     }
 
 }

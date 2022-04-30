@@ -19,6 +19,10 @@ public class MethodDescriptor {
         parse();
     }
 
+    public String getReturnType() {
+        return returnType;
+    }
+
     private void parse() {
         CharReader charReader = new CharReader();
         parseParamTypes(charReader);
@@ -65,8 +69,8 @@ public class MethodDescriptor {
             case 'V':
                 return c + "";
             case 'L':
-            case '[':
-                StringBuilder sb = new StringBuilder(c);
+                StringBuilder sb = new StringBuilder();
+                sb.append(c);
                 while (charReader.hasNext()) {
                     char c1 = charReader.getNext();
                     // 所有的参数类型都处理完了
@@ -81,6 +85,11 @@ public class MethodDescriptor {
                     sb.append(c1);
                 }
                 return sb.toString();
+            case '[':
+                StringBuilder sb2 = new StringBuilder();
+                sb2.append(c);
+                sb2.append(parseType(charReader));
+                return sb2.toString();
             default:
                 throw new RuntimeException("bad method decriptor: " + raw);
         }

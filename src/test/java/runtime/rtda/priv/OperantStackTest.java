@@ -7,7 +7,7 @@ public class OperantStackTest {
 
     @Test
     public void test() {
-        OperandStack operandStack = new OperandStack(100);
+        OperandStack operandStack = new OperandStack(100, null);
         operandStack.pushInt(100);
         operandStack.pushInt(-100);
         operandStack.pushLong(2997924580l);

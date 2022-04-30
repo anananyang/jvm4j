@@ -43,25 +43,25 @@ public class GET_FIELD extends Index16Instruction {
             throw new NullPointerException();
         }
         Slots objFields = obj.getFields();
-        switch (descriptor) {
-            case "Z":
-            case "B":
-            case "C":
-            case "S":
-            case "I":
+        switch (descriptor.charAt(0)) {
+            case 'Z':
+            case 'B':
+            case 'C':
+            case 'S':
+            case 'I':
                 stack.pushInt(objFields.getInt(slotId));
                 break;
-            case "F":
+            case 'F':
                 stack.pushFloat(objFields.getFloat(slotId));
                 break;
-            case "D":
+            case 'D':
                 stack.pushDouble(objFields.getDouble(slotId));
                 break;
-            case "J":
+            case 'J':
                 stack.pushLong(objFields.getLong(slotId));
                 break;
-            case "L":
-            case "[":   // 数组
+            case 'L':
+            case '[':   // 数组
                 stack.pushRef(objFields.getRef(slotId));
                 break;
         }

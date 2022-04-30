@@ -16,21 +16,25 @@ public abstract class InvokeMethodLogic {
      */
     public static void invokeMethod(Frame frame, JMethod jMethod) {
         // 暂时跳过本地方法调用
-        if(jMethod.isNative()) {
-            if("registerNatives".equals(jMethod.getName())) {
-                frame.getjThread().popFrame();
-            } else {
-                System.out.println(String.format("native method: %s.%s%s",
-                        jMethod.getjClass().getThisClassName(),
-                        jMethod.getName(),
-                        jMethod.getDescriptor()));
-            }
-            return;
+        if (jMethod.isNative()) {
+//            if ("registerNatives".equals(jMethod.getName())) {
+//                frame.getjThread().popFrame();
+//            } else {
+//                System.out.println(String.format("native method: %s.%s%s",
+//                        jMethod.getjClass().getThisClassName(),
+//                        jMethod.getName(),
+//                        jMethod.getDescriptor()));
+//            }
+//            return;
+
         }
+
+//        System.out.println(jMethod.getjClass().getThisClassName() + "." + jMethod.getName() + jMethod.getDescriptor());
         JThread jThread = frame.getjThread();
         Frame newFrame = jThread.newFrame(jMethod);
         setArgToLocalVarTable(jMethod, frame, newFrame);
         jThread.pushFrame(newFrame);
+
     }
 
     private static void setArgToLocalVarTable(JMethod jMethod, Frame frame, Frame newFrame) {
