@@ -642,5 +642,18 @@ public class JClass {
         return slots.getRef(jField.getSlotId());
     }
 
+    /**
+     * 设置静态变量
+     *
+     * @param name
+     * @param descriptor
+     * @param val
+     */
+    public void setRefVar(String name, String descriptor, JObject val) {
+        JField jField = getField(name, descriptor, true);
+        Slots slots = (Slots) staticVars;
+        slots.setRef(jField.getSlotId(), val);
+    }
+
 
 }

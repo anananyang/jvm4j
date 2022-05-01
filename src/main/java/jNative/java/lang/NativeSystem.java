@@ -1,9 +1,12 @@
 package jNative.java.lang;
 
 import jNative.JNativeMethod;
+import runtime.instructions.base.InvokeMethodLogic;
 import runtime.rtda.priv.Frame;
 import runtime.rtda.priv.LocalVariableTable;
 import runtime.rtda.share.heap.JClass;
+import runtime.rtda.share.heap.JClassLoader;
+import runtime.rtda.share.heap.JMethod;
 import runtime.rtda.share.heap.JObject;
 
 public class NativeSystem {
@@ -58,7 +61,30 @@ public class NativeSystem {
             // 直接利用 java 内置的 arraycopy 进行复制
             System.arraycopy(src.getArray(), srcPos, dest.getArray(), destPos, length);
         }
+    }
 
+
+    public static class SetOut0 implements JNativeMethod {
+
+        @Override
+        public void execute(Frame frame) {
+            JObject out = frame.getLocalVaribleTable().getRef(0);
+            JClass systemClass = frame.getjMethod().getjClass();
+            systemClass.setRefVar("out","Ljava/io/PrintStream;", out);
+        }
+
+    }
+
+
+    public static class InitProperties implements JNativeMethod {
+
+        @Override
+        public void execute(Frame frame) {
+            JClassLoader loader = frame.getjMethod().getjClass().getLoader();
+            JClass propClass = loader.loadClass("java/util/Properties");
+            JObject propObj = propClass.newObject();
+            frame.getOperandStack().pushRef(propObj);
+        }
 
     }
 }

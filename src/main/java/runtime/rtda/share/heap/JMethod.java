@@ -182,12 +182,16 @@ public class JMethod extends JClassMember {
     }
 
     public int getLineNumber(int PC) {
-        if(isNative()) {
+        if (isNative()) {
             return -2;
         }
-        if(lineNumerTable == null) {
+        if (lineNumerTable == null) {
             return -1;
         }
         return lineNumerTable.getLineNumber(PC);
-     }
+    }
+
+    public String getReturnType() {
+        return methodDescriptor.getReturnType();
+    }
 }

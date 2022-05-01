@@ -103,7 +103,7 @@ public class Interpreter {
         return jstrArrRef;
     }
 
-    private static void loop(JThread jThread, boolean logInstructionInfo) {
+    public static void loop(JThread jThread, boolean logInstructionInfo) {
         do {
             Frame frame = jThread.topFrame();
             ByteCodeReader byteCodeReader = frame.getByteCodeReader();

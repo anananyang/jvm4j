@@ -93,6 +93,17 @@ public class Registry {
                 "(I)Ljava/lang/Throwable;",
                 new NativeThrowable.FillInStackTrace());
 
+        registry("java/lang/System",
+                "setOut0",
+                "(Ljava/io/PrintStream;)V",
+                new NativeSystem.SetOut0());
+
+
+        registry("java/lang/System",
+                "initProperties",
+                "(Ljava/util/Properties;)Ljava/util/Properties;",
+                new NativeSystem.InitProperties());
+
     }
 
     public static void registry(String className,

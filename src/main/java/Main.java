@@ -16,12 +16,11 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Main main = new Main();
-        CommandLine cmd = main.parseCommandLine(args);
-        main.execute(cmd);
+        CommandLine cmd = parseCommandLine(args);
+        execute(cmd);
     }
 
-    public CommandLine parseCommandLine(String[] args) {
+    public static CommandLine parseCommandLine(String[] args) {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
         try {
@@ -33,56 +32,23 @@ public class Main {
     }
 
 
-    public void execute(CommandLine cmd) {
+    public static void execute(CommandLine cmd) {
         if (cmd.hasOption("version")) {
             printVersion();
         } else if (cmd.hasOption("help") || cmd.hasOption("?") || !cmd.hasOption("cp")) {
             printUsage();
         } else {
-            startJvm(cmd);
+            new JVM(cmd).start();
         }
     }
 
-    private void printUsage() {
+    private static void printUsage() {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("jvm4j", options);
     }
 
-    private void printVersion() {
+    private static void printVersion() {
         System.out.println("jvm4j version 0.1");
     }
 
-    private void startJvm(CommandLine cmd) {
-        ClassFile classFile = loadClass(cmd);
-    }
-
-    public ClassFile loadClass(CommandLine cmd) {
-        String xjre = cmd.getOptionValue("xjre");
-        String classpath = cmd.getOptionValue("cp");
-        String[] commandArgs = cmd.getArgs();
-        if (commandArgs == null || commandArgs.length == 0) {
-            throw new RuntimeException("can not found classname and args");
-        }
-        String className = commandArgs[0];
-        try {
-            ClassPath classPath = new ClassPath(xjre, classpath);
-            byte[] bytes = classPath.readClass(className);
-            ClassReader classReader = new ClassReader(bytes);
-            ClassFile classFile = classReader.read();
-            return classFile;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String getClassArgs(String[] commandArgs) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i < commandArgs.length; i++) {
-            sb.append(commandArgs[i]);
-            if (i != commandArgs.length - 1) {
-                sb.append(" ");
-            }
-        }
-        return sb.toString();
-    }
 }

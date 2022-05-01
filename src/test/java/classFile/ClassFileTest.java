@@ -16,6 +16,7 @@ public class ClassFileTest {
         String classpath = "/Users/t/myProject/jvm4j/src/main/resources";
         String className = "java.lang.String";
 
+
         ClassPath classPath = new ClassPath(xjre, classpath);
         byte[] bytes = classPath.readClass(className);
         if(bytes == null) {
