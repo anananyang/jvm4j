@@ -29,7 +29,7 @@ public class Frame {
     public Frame(JThread jThread, int maxLocals, int maxStack) {
         this.jThread = jThread;
         this.localVaribleTable = new LocalVariableTable(maxLocals);
-        this.operandStack = new OperandStack(maxStack, null);
+        this.operandStack = new OperandStack(maxStack);
     }
 
     public Frame(JThread jThread, JMethod jMethod) {
@@ -37,7 +37,7 @@ public class Frame {
         this.jMethod = jMethod;
         this.byteCodeReader = new ByteCodeReader(jMethod.getCode());
         this.localVaribleTable = new LocalVariableTable(jMethod.getMaxLocals());
-        this.operandStack = new OperandStack(jMethod.getMaxStack(), jMethod);
+        this.operandStack = new OperandStack(jMethod.getMaxStack());
     }
 
     public LocalVariableTable getLocalVaribleTable() {

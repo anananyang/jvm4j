@@ -4,6 +4,7 @@ import classFile.attributes.AttributeInfo;
 import eum.AttributeType;
 import classFile.reader.AttributeReader;
 import classFile.reader.ByteReader;
+import util.AttributeUtil;
 
 public class MemberInfo {
     private ConstantPool constantPool;
@@ -34,19 +35,6 @@ public class MemberInfo {
 
     public AttributeInfo[] getAttributes() {
         return attributes;
-    }
-
-    public AttributeInfo getFirstAttrByType(AttributeType attributeType) {
-        if (isAttributesEmpty()) {
-            return null;
-        }
-        String name = attributeType.name();
-        for (AttributeInfo attribute : attributes) {
-            if (name.equals(attribute.getAttrName())) {
-                return attribute;
-            }
-        }
-        return null;
     }
 
     private boolean isAttributesEmpty() {

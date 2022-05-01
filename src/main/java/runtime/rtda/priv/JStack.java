@@ -47,4 +47,19 @@ public class JStack {
     public boolean isEmpty() {
         return list.isEmpty();
     }
+
+    public void clear() {
+        while (isEmpty()) {
+            pop();
+        }
+    }
+
+    public Frame[] getFrames(int skip) {
+        int len = list.size() - skip;
+        Frame[] frames = new Frame[len];
+        for (int i = 0; i < len; i++) {
+            frames[i] = list.get(len - 1 - i);
+        }
+        return frames;
+    }
 }

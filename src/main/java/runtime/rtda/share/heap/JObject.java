@@ -91,7 +91,7 @@ public class JObject {
     }
 
     public JObject getRefVar(String name, String descriptor) {
-        JField jField = jClass.getField(name, descriptor, false);
+        JField jField = jClass.lookupField(name, descriptor);
         Slots slots = (Slots) data;
         return slots.getRef(jField.getSlotId());
     }

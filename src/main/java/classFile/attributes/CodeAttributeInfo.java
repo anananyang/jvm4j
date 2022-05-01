@@ -3,6 +3,8 @@ package classFile.attributes;
 import classFile.ConstantPool;
 import classFile.reader.AttributeReader;
 import classFile.reader.ByteReader;
+import eum.AttributeType;
+import util.AttributeUtil;
 
 public class CodeAttributeInfo extends AttributeInfo {
 
@@ -69,29 +71,30 @@ public class CodeAttributeInfo extends AttributeInfo {
     }
 
 
-    class ExcetionTableEntry {
-        private int startPc;
-        private int endPc;
-        private int handlePc;
+    public class ExcetionTableEntry {
+        private int startPC;
+        private int endPC;
+        private int handlerPC;
         private int catchType;
 
         ExcetionTableEntry(ByteReader byteReader) {
-            this.startPc = byteReader.readUnit16();
-            this.endPc = byteReader.readUnit16();
-            this.handlePc = byteReader.readUnit16();
+            this.startPC = byteReader.readUnit16();
+            this.endPC = byteReader.readUnit16();
+            this.handlerPC = byteReader.readUnit16();
             this.catchType = byteReader.readUnit16();
         }
 
-        public int getStartPc() {
-            return startPc;
+
+        public int getStartPC() {
+            return startPC;
         }
 
-        public int getEndPc() {
-            return endPc;
+        public int getEndPC() {
+            return endPC;
         }
 
-        public int getHandlePc() {
-            return handlePc;
+        public int getHandlerPC() {
+            return handlerPC;
         }
 
         public int getCatchType() {
@@ -99,4 +102,7 @@ public class CodeAttributeInfo extends AttributeInfo {
         }
     }
 
+    public LineNumberTableAttributeInfo getLineNumberAttr() {
+        return (LineNumberTableAttributeInfo) AttributeUtil.getFirstAttrByType(AttributeType.LineNumberTable, attributes);
+    }
 }

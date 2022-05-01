@@ -238,6 +238,7 @@ public abstract class InstructionFactory {
         nopInsctructionMap.put(0xb1, new RETURN());
 
         nopInsctructionMap.put(0xbe, new ARRAY_LENGTH());
+        nopInsctructionMap.put(0xbf, new ATHROW());
 
         // 保留指令，用于调用本地方法
         nopInsctructionMap.put(0xfe, new INVOKE_NATIVE());

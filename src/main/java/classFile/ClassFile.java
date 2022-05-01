@@ -1,6 +1,7 @@
 package classFile;
 
 import classFile.attributes.AttributeInfo;
+import eum.AttributeType;
 
 import java.util.Arrays;
 
@@ -129,5 +130,9 @@ public class ClassFile {
 
     public MemberInfo[] getMethods() {
         return methods;
+    }
+
+    public AttributeInfo[] getAttributes() {
+        return attributes;
     }
 }

@@ -38,4 +38,11 @@ public class JThread {
         return new Frame(this, jMethod);
     }
 
+    public void clearStack() {
+        stack.clear();
+    }
+
+    public Frame[] getFrames(int skip) {
+        return stack.getFrames(skip);
+    }
 }

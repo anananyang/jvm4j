@@ -7,11 +7,9 @@ import runtime.rtda.share.heap.JObject;
 public class OperandStack {
     private Slot[] slots;
     private int size;
-    private JMethod jMethod;
 
-    public OperandStack(int maxStack, JMethod jMethod) {
+    public OperandStack(int maxStack) {
         this.slots = new Slot[maxStack];
-        this.jMethod = jMethod;
     }
 
     public void pushBoolean(boolean value) {
@@ -100,19 +98,12 @@ public class OperandStack {
     public void pushSlot(Slot slot) {
         slots[size] = slot;
         size++;
-//        if(jMethod != null){
-//            System.out.println(jMethod.getjClass().getThisClassName() + "." + jMethod.getName() + " push : " + slot.get());
-//        }
-
     }
 
     public Slot popSlot() {
         size--;
         Slot slot = slots[size];
         slots[size] = null;
-//        if(jMethod != null){
-//            System.out.println(jMethod.getjClass().getThisClassName() + "." + jMethod.getName() + " pop : " + slot.get());
-//        }
         return slot;
     }
 
@@ -124,4 +115,9 @@ public class OperandStack {
         return (JObject) slots[index].get();
     }
 
+    public void clear() {
+        for (int i = 0; i < size; i++) {
+            slots[i] = null;
+        }
+    }
 }

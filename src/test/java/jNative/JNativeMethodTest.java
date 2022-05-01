@@ -17,9 +17,10 @@ public class JNativeMethodTest {
         String classpath = "/Users/t/myProject/jvm4j/src/main/resources";
         ClassPath classPath = new ClassPath(xjre, classpath);
         JClassLoader loader = new JClassLoader(classPath);
-        String[] classNames = {"GetClassTest", "StringTest", "ObjectTest"};
+//        String[] classNames = {"GetClassTest", "StringTest", "ObjectTest"};
         // 拆装箱未完成
 //        String[] classNames = {"BoxTest"};
+        String[] classNames = {"ParseIntTest"};
 
         for(String className : classNames) {
             System.out.println("--------- " + className + "-------------");

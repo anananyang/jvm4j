@@ -2,8 +2,12 @@ package runtime.rtda.share.heap;
 
 import classFile.MemberInfo;
 import classFile.attributes.CodeAttributeInfo;
+import classFile.attributes.ConstantValueAttributeInfo;
 import eum.AccessFlag;
 import eum.AttributeType;
+import util.AttributeUtil;
+
+import static eum.AttributeType.ConstantValue;
 
 public class JMethod extends JClassMember {
     private int maxLocals;
@@ -11,6 +15,10 @@ public class JMethod extends JClassMember {
     private byte[] code;
     private int argSlotCount;
     private MethodDescriptor methodDescriptor;
+    // 异常处理表
+    private JExceptionTable exceptionTable;
+    // 行号
+    private JLineNumerTable lineNumerTable;
 
     public JMethod(JClass jClass, MemberInfo memberInfo) {
         super(jClass, memberInfo);
@@ -20,7 +28,7 @@ public class JMethod extends JClassMember {
         if (isNative()) {
             this.injectCodeAttribute();
         } else {
-            this.copyCodeAttribute(memberInfo);
+            copyAttributes(memberInfo);
         }
     }
 
@@ -46,7 +54,7 @@ public class JMethod extends JClassMember {
                 code = new byte[]{(byte) 0xfe, (byte) 0xad};
                 break;
             case '[':
-            // areturn
+                // areturn
             case 'L':
                 code = new byte[]{(byte) 0xfe, (byte) 0xb0};
                 break;
@@ -58,14 +66,22 @@ public class JMethod extends JClassMember {
         this.code = code;
     }
 
+    private void copyAttributes(MemberInfo memberInfo) {
+        // 先复制code属性
+        this.copyCodeAttribute(memberInfo);
+    }
+
+
     private void copyCodeAttribute(MemberInfo memberInfo) {
-        CodeAttributeInfo codeAttributeInfo = (CodeAttributeInfo) memberInfo.getFirstAttrByType(AttributeType.Code);
+        CodeAttributeInfo codeAttributeInfo = (CodeAttributeInfo) AttributeUtil.getFirstAttrByType(AttributeType.Code, memberInfo.getAttributes());
         if (codeAttributeInfo == null) {
             return;
         }
         this.maxLocals = codeAttributeInfo.getMaxLocal();
         this.maxStack = codeAttributeInfo.getMaxStack();
         this.code = codeAttributeInfo.getCode();
+        this.exceptionTable = new JExceptionTable(codeAttributeInfo.getExcetionTable(), jClass.getConstantPool());
+        this.lineNumerTable = new JLineNumerTable(codeAttributeInfo.getLineNumberAttr());
     }
 
     private int calcArgsCount() {
@@ -159,4 +175,19 @@ public class JMethod extends JClassMember {
         // 私有访问权限，只有统一个类能访问
         return jClass == other;
     }
+
+    public int findExceptionHandlerPC(JClass exceptionClass, int PC) {
+        JExceptionTable.ExceptionHandler handler = exceptionTable.findExceptionHandler(exceptionClass, PC);
+        return handler == null ? -1 : handler.getHandlerPC();
+    }
+
+    public int getLineNumber(int PC) {
+        if(isNative()) {
+            return -2;
+        }
+        if(lineNumerTable == null) {
+            return -1;
+        }
+        return lineNumerTable.getLineNumber(PC);
+     }
 }

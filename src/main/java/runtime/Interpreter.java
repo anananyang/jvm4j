@@ -14,30 +14,28 @@ public class Interpreter {
 
     /**
      * 为指令集测试专用
-     *
-     * @param memberInfo
+     * <p>
+     * //     * @param memberInfo
      */
-    public static void interpret(MemberInfo memberInfo) {
-        CodeAttributeInfo codeAttribute = (CodeAttributeInfo) memberInfo.getFirstAttrByType(AttributeType.Code);
-        if (codeAttribute == null) {
-            throw new RuntimeException("code attribute not found");
-        }
-        int maxLocal = codeAttribute.getMaxLocal();
-        int maxStack = codeAttribute.getMaxStack();
-
-        JThread jThread = new JThread();
-        Frame frame = new Frame(jThread, maxLocal, maxStack);
-        jThread.pushFrame(frame);
-        try {
-            loop(jThread, codeAttribute.getCode());   // 目前没有执行 ret 指令，所以会抛出异常
-        } catch (Exception e) {
-            e.printStackTrace();
-            // 打印本地局部变量表的内容
-            frame.getLocalVaribleTable().printSlots();
-        }
-    }
-
-
+//    public static void interpret(MemberInfo memberInfo) {
+//        CodeAttributeInfo codeAttribute = (CodeAttributeInfo) memberInfo.getFirstAttrByType(AttributeType.Code);
+//        if (codeAttribute == null) {
+//            throw new RuntimeException("code attribute not found");
+//        }
+//        int maxLocal = codeAttribute.getMaxLocal();
+//        int maxStack = codeAttribute.getMaxStack();
+//
+//        JThread jThread = new JThread();
+//        Frame frame = new Frame(jThread, maxLocal, maxStack);
+//        jThread.pushFrame(frame);
+//        try {
+//            loop(jThread, codeAttribute.getCode());   // 目前没有执行 ret 指令，所以会抛出异常
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            // 打印本地局部变量表的内容
+//            frame.getLocalVaribleTable().printSlots();
+//        }
+//    }
     private static void loop(JThread jThread, byte[] byteCode) {
         Frame frame = jThread.topFrame();
         ByteCodeReader byteCodeReader = new ByteCodeReader(byteCode);
@@ -70,10 +68,8 @@ public class Interpreter {
         JThread jThread = new JThread();
         Frame frame = jThread.newFrame(jMethod);
         // 设置 main 方法的执行参数
-        if (!isEmptyArr(args)) {
-            JObject jargs = createJArgsArray(jMethod.getjClass().getLoader(), args);
-            frame.getLocalVaribleTable().setRef(0, jargs);
-        }
+        JObject jargs = createJArgsArray(jMethod.getjClass().getLoader(), args);
+        frame.getLocalVaribleTable().setRef(0, jargs);
         jThread.pushFrame(frame);
         try {
             loop(jThread, logInstructionInfo);   // 目前没有执行 ret 指令，所以会抛出异常
@@ -95,7 +91,10 @@ public class Interpreter {
 
     private static JObject createJArgsArray(JClassLoader loader, String[] args) {
         JClass stringClass = loader.loadClass("java/lang/String");
-        JObject jstrArrRef = stringClass.getArrayClass().newArray(args.length);
+        JObject jstrArrRef = stringClass.getArrayClass().newArray(args == null ? 0 : args.length);
+        if(args == null) {
+            return jstrArrRef;
+        }
         // 从数组对象中取出实际的数组
         JObject[] refs = jstrArrRef.getRefArray();
         for (int i = 0; i < args.length; i++) {

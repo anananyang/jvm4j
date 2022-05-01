@@ -2,12 +2,15 @@ package runtime.rtda.share.heap;
 
 import classFile.ClassFile;
 import classFile.MemberInfo;
+import classFile.attributes.SourceFileAttributeInfo;
 import eum.AccessFlag;
 import eum.ArrayType;
+import eum.AttributeType;
 import eum.PrimitiveType;
 import runtime.rtda.priv.Frame;
 import runtime.rtda.priv.JThread;
 import runtime.rtda.share.heap.rtcp.RuntimeConstantPool;
+import util.AttributeUtil;
 
 
 public class JClass {
@@ -40,6 +43,7 @@ public class JClass {
     private boolean initStarted = false;
     // class 对象， java 中的每个对象都与其 class 关联，而 JClass 关联着 class 对象，这样对象就可以通过 getClass 方法或者到 class 对象，进行相关的反射处理
     private JObject classObj;
+    private String sourceFile;
 
     public JClass(ClassFile classFile) {
         this.accessFlags = classFile.getAccessFlag();
@@ -49,6 +53,7 @@ public class JClass {
         this.constantPool = new RuntimeConstantPool(this, classFile.getConstantPool());
         this.fields = getFields(classFile.getFileds());
         this.methods = getMethods(classFile.getMethods());
+        this.sourceFile = getSourceFile(classFile);
     }
 
     public JClass(int accessFlags,
@@ -74,6 +79,11 @@ public class JClass {
 
         }
         this.initStarted = initStarted;
+    }
+
+    private String getSourceFile(ClassFile classFile) {
+        SourceFileAttributeInfo attributeInfo = (SourceFileAttributeInfo) AttributeUtil.getFirstAttrByType(AttributeType.SourceFile, classFile.getAttributes());
+        return attributeInfo == null ? "Unknown" : attributeInfo.getSourceFile();
     }
 
 
@@ -611,6 +621,10 @@ public class JClass {
         return thisClassName.replace("/", ".");
     }
 
+    public String getSourceFile() {
+        return sourceFile;
+    }
+
     public boolean isPrimitiveType() {
         return PrimitiveType.getByType(thisClassName) != null;
     }
@@ -627,5 +641,6 @@ public class JClass {
         Slots slots = (Slots) staticVars;
         return slots.getRef(jField.getSlotId());
     }
+
 
 }

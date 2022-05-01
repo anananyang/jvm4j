@@ -87,6 +87,12 @@ public class Registry {
                 "()V",
                 new VM.Initialize());
 
+
+        registry("java/lang/Throwable",
+                "fillInStackTrace",
+                "(I)Ljava/lang/Throwable;",
+                new NativeThrowable.FillInStackTrace());
+
     }
 
     public static void registry(String className,

@@ -14,9 +14,10 @@ public class SourceFileAttributeInfo extends AttributeInfo {
                                    ConstantPool constantPool) {
         super(attrName, attrLen);
         this.sourceFileIndex = byteReader.readUnit16();
+        this.constantPool = constantPool;
     }
 
-    public int getSourceFileIndex() {
-        return sourceFileIndex;
+    public String getSourceFile() {
+        return constantPool.getUtf8(sourceFileIndex);
     }
 }

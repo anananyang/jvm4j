@@ -4,6 +4,9 @@ import classFile.MemberInfo;
 import classFile.attributes.ConstantValueAttributeInfo;
 import eum.AccessFlag;
 import eum.AttributeType;
+import util.AttributeUtil;
+
+import static eum.AttributeType.ConstantValue;
 
 public class JField extends JClassMember {
     // 该字段在 Slots 的索引
@@ -13,7 +16,7 @@ public class JField extends JClassMember {
 
     public JField(JClass jClass, MemberInfo memberInfo) {
         super(jClass, memberInfo);
-        ConstantValueAttributeInfo attributeInfo = (ConstantValueAttributeInfo) memberInfo.getFirstAttrByType(AttributeType.ConstantValue);
+        ConstantValueAttributeInfo attributeInfo = (ConstantValueAttributeInfo) AttributeUtil.getFirstAttrByType(ConstantValue, memberInfo.getAttributes());
         if (attributeInfo != null) {
             this.constValueIndex = attributeInfo.getConstantValueIndex();
         }
